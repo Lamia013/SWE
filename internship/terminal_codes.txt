@@ -16,46 +16,12 @@ del db.sqlite3 (DB delete)
 
 
 Git:
-
-       git clone ......link......
-       dir    (shows file & folder)
+(uploading to git)
 
 
 
-       git add       ......file.name......tracks file
-       git commit -m ""
-                  -am "merged conflict"   
-       git push      (updates on github)
-
-
-
-
-       git pull      (updates locally)
-       git reset --hard ......<commit hash>......
-                        origin/master    
-                        
-       git status    (shows status)
-
-       git branch    (shows all brach & what you are on by *)
-       git checkout -b branch_name
-                    master  (switch branch)
-       git merge branch_name 
-
-       git branch -D branch_name   (delete brach forcefully)
-
-       
-       "git add <file>..." to update what will be committed
-       "git restore <file>..." to discard changes in working directory
-
-
-uploading to git:
-git init
 git add .
-git commit -m "Initial Commit"
-git branch -M main
-//////////////////git remote add origin https://github.com/Lamia013/JobPortal.git
-git push -u origin main 
+git commit -m "....."
+git push 
 
 
-merging another repository manually:
-https://github.com/Lamia013/JobPortal.git
