@@ -1,1 +1,415 @@
-<p>publish post</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Applications</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #f8faff;
+            font-family: 'Segoe UI', sans-serif;
+            color: #0f172a;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h3 {
+            margin-bottom: 25px;
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .summary-title {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .summary-number {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .pending {
+            color: #f59e0b;
+        }
+
+        .accepted {
+            color: #16a34a;
+        }
+
+        .rejected {
+            color: #dc2626;
+        }
+
+        /* TABLE */
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            text-align: left;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-top: 1px solid #eef2f6;
+            font-size: 14px;
+        }
+
+        .view-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+        /* STATUS */
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 700px) {
+
+            .summary {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>Applications</h3>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+        <div class="summary-card">
+
+            <div class="summary-title">
+                Total
+            </div>
+
+            <div class="summary-number">
+                5
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title pending">
+                Pending
+            </div>
+
+            <div class="summary-number pending">
+                2
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title accepted">
+                Accepted
+            </div>
+
+            <div class="summary-number accepted">
+                2
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-title rejected">
+                Rejected
+            </div>
+
+            <div class="summary-number rejected">
+                1
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- APPLICATION TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Resume</th>
+                    <th>Cover</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <!-- APPLICATION 1 -->
+
+                <tr>
+
+                    <td>
+                        08/08/2026
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Resume preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Cover letter preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="status status-pending">
+                            Pending
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <!-- APPLICATION 2 -->
+
+                <tr>
+
+                    <td>
+                        06/08/2026
+                    </td>
+
+                    <td>
+                        <a href="{% static 'files/sample_resume.pdf' %}"
+                        class="view-link"
+                        target="_blank">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="{% static 'files/sample_cover_letter.pdf' %}"
+                           class="view-link"
+                           target="_blank">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="status status-accepted">
+                            Accepted
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <!-- APPLICATION 3 -->
+
+                <tr>
+
+                    <td>
+                        04/08/2026
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Resume preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Cover letter preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="status status-rejected">
+                            Rejected
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <!-- APPLICATION 4 -->
+
+                <tr>
+
+                    <td>
+                        02/08/2026
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Resume preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Cover letter preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="status status-accepted">
+                            Accepted
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <!-- APPLICATION 5 -->
+
+                <tr>
+
+                    <td>
+                        30/07/2026
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Resume preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="#"
+                           class="view-link"
+                           onclick="alert('Cover letter preview opened'); return false;">
+                            View
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="status status-pending">
+                            Pending
+                        </span>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
