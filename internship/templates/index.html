@@ -1,576 +1,581 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Portal</title>
+{% extends "accounts/base.html" %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        body {
-            background-color: #f8faff;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            color: #0f172a;
-        }
+{% block title %}
+Job Portal
+{% endblock %}
 
-        /* NAVBAR */
-        .navbar {
-            background: #2563eb;
-            padding: 12px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
-        .navbar-brand {
-            color: white;
-            text-decoration: none;
-            font-size: 21px;
-            font-weight: 700;
-        }
+{% block css %}
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+<style>
 
-        .btn-white-blue {
-            background-color: #ffffff;
-            color: #0d6efd;
-            border: 1px solid #ffffff;
-            font-weight: 600;
-            padding: 7px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-left: 4px;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        .btn-white-blue:hover {
-            background-color: #e7f1ff;
-            color: #0a58ca;
-        }
 
-        /* PAGE */
+    body {
+        background-color: #f8faff;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        color: #0f172a;
+    }
+
+
+    /* PAGE */
+
+    .page {
+        display: flex;
+        gap: 25px;
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+
+    /* FILTER */
+
+    .filter {
+        width: 240px;
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        height: fit-content;
+    }
+
+
+    .filter h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+
+    .filter input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+
+    .filter label {
+        display: block;
+        margin: 10px 0;
+        color: #475569;
+    }
+
+
+    /* GENERAL BUTTON */
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        border-radius: 9px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+        border: none;
+        margin-top: 10px;
+    }
+
+
+    .btn-primary:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* JOB AREA */
+
+    .jobs {
+        flex: 1;
+    }
+
+
+    /* ADD JOB BUTTON */
+
+    .add-job-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+
+    .add-job-btn {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 11px 18px;
+        border-radius: 9px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+
+    .add-job-btn:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* JOB CARD */
+
+    .job-card {
+        background: white;
+        border: 1px solid #eef2f6;
+        border-radius: 18px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+
+    .job-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .company {
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+
+    .badge {
+        background: #f1f3f5;
+        color: #64748b;
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-left: 8px;
+    }
+
+
+    .job-title {
+        display: block;
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 20px;
+        margin-top: 8px;
+        text-decoration: none;
+    }
+
+
+    .job-title:hover {
+        color: #2563eb;
+    }
+
+
+    .meta {
+        color: #64748b;
+        font-size: 14px;
+        margin-top: 12px;
+    }
+
+
+    .salary {
+        color: #16a34a;
+        font-weight: 600;
+        margin-left: 15px;
+    }
+
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+
+    .actions button {
+        flex: 1;
+    }
+
+
+    .actions .btn {
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+    }
+
+
+    .hiring {
+        color: #16a34a;
+        border-color: #dcfce7;
+    }
+
+
+    .hiring:hover {
+        background: #f0fdf4;
+    }
+
+
+    .bookmark {
+        border: none;
+        background: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+
+    /* JOB DETAILS OVERLAY */
+
+    #details {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,0.4);
+        padding: 50px 15px;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+
+    .details-box {
+        background: white;
+        max-width: 650px;
+        margin: auto;
+        padding: 25px;
+        border-radius: 16px;
+        position: relative;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+    }
+
+
+    .overlay-header {
+        margin-bottom: 20px;
+    }
+
+
+    .overlay-header h5 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+
+    .close {
+        position: absolute;
+        right: 18px;
+        top: 15px;
+        border: none;
+        background: none;
+        font-size: 22px;
+        color: #64748b;
+        cursor: pointer;
+    }
+
+
+    .close:hover {
+        color: #0f172a;
+    }
+
+
+    .company-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+
+    .overlay-job-title {
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+
+    .company-name {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+
+    .apply-btn {
+        background: #2563eb;
+        color: white;
+        padding: 9px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .apply-btn:hover {
+        background: #1d4ed8;
+        color: white;
+    }
+
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 18px 0;
+        background: #f8fafc;
+        padding: 14px;
+        border-radius: 12px;
+        flex-wrap: wrap;
+    }
+
+
+    .info-row div {
+        min-width: 90px;
+    }
+
+
+    .info-row div span {
+        color: #64748b;
+        display: block;
+        font-size: 10px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+
+    .info-row div strong {
+        font-size: 13px;
+        color: #0f172a;
+    }
+
+
+    .description-section {
+        margin-top: 20px;
+    }
+
+
+    .description-section h6 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+
+    .description-section p {
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+
+    .tags {
+        margin-top: 15px;
+    }
+
+
+    .tag {
+        background: #f1f3f5;
+        color: #0f172a;
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-right: 6px;
+        margin-top: 6px;
+    }
+
+
+    /* ADD JOB MODAL */
+
+    #addJobModal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,0.45);
+        padding: 40px 15px;
+        z-index: 2000;
+        overflow-y: auto;
+    }
+
+
+    .add-job-box {
+        background: white;
+        max-width: 650px;
+        margin: auto;
+        padding: 28px;
+        border-radius: 16px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    }
+
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+
+    .modal-close {
+        border: none;
+        background: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #64748b;
+    }
+
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 7px;
+        color: #334155;
+    }
+
+
+    .form-control {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #dbe2ea;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+    }
+
+
+    .form-control:focus {
+        border-color: #2563eb;
+    }
+
+
+    textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+    }
+
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+
+    .modal-actions button {
+        flex: 1;
+    }
+
+
+    .btn-cancel {
+        background: white;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+    }
+
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+    }
+
+
+    .success-message {
+        display: none;
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 800px) {
+
         .page {
-            display: flex;
-            gap: 25px;
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
+            flex-direction: column;
         }
 
-        /* FILTER */
+
         .filter {
-            width: 240px;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            height: fit-content;
+            width: auto;
         }
 
-        .filter h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .filter input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .filter label {
-            display: block;
-            margin: 10px 0;
-            color: #475569;
-        }
-
-        /* GENERAL BUTTON */
-        .btn {
-            width: 100%;
-            padding: 10px;
-            border-radius: 9px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-            border: none;
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        /* JOB AREA */
-        .jobs {
-            flex: 1;
-        }
-
-        /* ADD JOB BUTTON */
-        .add-job-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .add-job-btn {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 11px 18px;
-            border-radius: 9px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .add-job-btn:hover {
-            background: #1d4ed8;
-        }
-
-        /* JOB CARD */
-        .job-card {
-            background: white;
-            border: 1px solid #eef2f6;
-            border-radius: 18px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .company {
-            color: #2563eb;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .badge {
-            background: #f1f3f5;
-            color: #64748b;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            margin-left: 8px;
-        }
-
-        .job-title {
-            display: block;
-            color: #0f172a;
-            font-weight: 700;
-            font-size: 20px;
-            margin-top: 8px;
-            text-decoration: none;
-        }
-
-        .job-title:hover {
-            color: #2563eb;
-        }
-
-        .meta {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 12px;
-        }
-
-        .salary {
-            color: #16a34a;
-            font-weight: 600;
-            margin-left: 15px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .actions button {
-            flex: 1;
-        }
-
-        .hiring {
-            color: #16a34a;
-            border-color: #dcfce7;
-        }
-
-        .hiring:hover {
-            background: #f0fdf4;
-        }
-
-        .bookmark {
-            border: none;
-            background: none;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* =========================================
-           JOB DETAILS OVERLAY
-        ========================================= */
-
-        #details {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.4);
-            padding: 50px 15px;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .details-box {
-            background: white;
-            max-width: 650px;
-            margin: auto;
-            padding: 25px;
-            border-radius: 16px;
-            position: relative;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-        }
-
-        .overlay-header {
-            margin-bottom: 20px;
-        }
-
-        .overlay-header h5 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .close {
-            position: absolute;
-            right: 18px;
-            top: 15px;
-            border: none;
-            background: none;
-            font-size: 22px;
-            color: #64748b;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: #0f172a;
-        }
-
-        .company-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .overlay-job-title {
-            color: #0f172a;
-            font-weight: 600;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .company-name {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .apply-btn {
-            background: #2563eb;
-            color: white;
-            padding: 9px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .apply-btn:hover {
-            background: #1d4ed8;
-            color: white;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin: 18px 0;
-            background: #f8fafc;
-            padding: 14px;
-            border-radius: 12px;
-            flex-wrap: wrap;
-        }
-
-        .info-row div {
-            min-width: 90px;
-        }
-
-        .info-row div span {
-            color: #64748b;
-            display: block;
-            font-size: 10px;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .info-row div strong {
-            font-size: 13px;
-            color: #0f172a;
-        }
-
-        .description-section {
-            margin-top: 20px;
-        }
-
-        .description-section h6 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .description-section p {
-            color: #64748b;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .tags {
-            margin-top: 15px;
-        }
-
-        .tag {
-            background: #f1f3f5;
-            color: #0f172a;
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-right: 6px;
-            margin-top: 6px;
-        }
-
-        /* =========================================
-           ADD JOB MODAL
-        ========================================= */
-
-        #addJobModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.45);
-            padding: 40px 15px;
-            z-index: 2000;
-            overflow-y: auto;
-        }
-
-        .add-job-box {
-            background: white;
-            max-width: 650px;
-            margin: auto;
-            padding: 28px;
-            border-radius: 16px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            font-size: 22px;
-        }
-
-        .modal-close {
-            border: none;
-            background: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 7px;
-            color: #334155;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 11px 12px;
-            border: 1px solid #dbe2ea;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .form-control:focus {
-            border-color: #2563eb;
-        }
-
-        textarea.form-control {
-            min-height: 110px;
-            resize: vertical;
-        }
 
         .form-row {
-            display: flex;
-            gap: 15px;
+            flex-direction: column;
+            gap: 0;
         }
 
-        .form-row .form-group {
-            flex: 1;
+
+        .add-job-container {
+            justify-content: stretch;
         }
 
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+
+        .add-job-btn {
+            width: 100%;
         }
 
-        .modal-actions button {
-            flex: 1;
+    }
+
+
+    @media (max-width: 600px) {
+
+        .company-info {
+            align-items: flex-start;
+            flex-direction: column;
         }
 
-        .btn-cancel {
-            background: white;
-            color: #475569;
-            border: 1px solid #cbd5e1;
+
+        .apply-btn {
+            width: 100%;
+            text-align: center;
         }
 
-        .btn-cancel:hover {
-            background: #f8fafc;
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
 
-        .success-message {
-            display: none;
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
+    }
 
-        /* RESPONSIVE */
-        @media (max-width: 800px) {
+</style>
 
-            .navbar {
-                flex-direction: column;
-                gap: 12px;
-            }
+{% endblock %}
 
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
 
-            .page {
-                flex-direction: column;
-            }
-
-            .filter {
-                width: auto;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-
-            .add-job-container {
-                justify-content: stretch;
-            }
-
-            .add-job-btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .company-info {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .apply-btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .info-row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        .actions .btn {
-    flex: 1;
-    text-align: center;
-    text-decoration: none;
-}
-    </style>
-</head>
-
-<body>
-
-<!-- =========================================
-     NAVIGATION BAR
-========================================= -->
-
-<nav class="navbar">
-
-    <a href="#" class="navbar-brand">
-        Internship Tracker
-    </a>
-
-    <div class="nav-links">
-
-        <a href="#" class="btn-white-blue">
-            About Us
-        </a>
-
-        <a href="#" class="btn-white-blue">
-            Home
-        </a>
-
-        <a href="#" class="btn-white-blue">
-            Admin
-        </a>
-
-        <a href="#" class="btn-white-blue">
-            Sign In
-        </a>
-
-    </div>
-
-</nav>
+{% block content %}
 
 
 <!-- =========================================
@@ -579,38 +584,54 @@
 
 <div class="page">
 
+
     <!-- FILTER SIDEBAR -->
 
     <div class="filter">
 
-        <h3>Search & Filter</h3>
+        <h3>
+            Search & Filter
+        </h3>
 
-        <input type="text"
-               placeholder="Search jobs">
 
-        <strong>Job Type</strong>
+        <input
+            type="text"
+            placeholder="Search jobs"
+        >
+
+
+        <strong>
+            Job Type
+        </strong>
+
 
         <label>
             <input type="checkbox">
             Full-time
         </label>
 
+
         <label>
             <input type="checkbox">
             Part-time
         </label>
+
 
         <label>
             <input type="checkbox">
             Internship
         </label>
 
+
         <button class="btn btn-primary">
             Apply Filters
         </button>
 
-        <button class="btn"
-                style="margin-top:8px;">
+
+        <button
+            class="btn"
+            style="margin-top:8px;"
+        >
             Clear Filters
         </button>
 
@@ -621,21 +642,22 @@
 
     <div class="jobs">
 
-        <!-- ADD NEW JOB BUTTON -->
+        {% if user.is_authenticated %}
+            <!-- ADD NEW JOB -->
 
-        <div class="add-job-container">
+            <div class="add-job-container">
 
-            <button class="add-job-btn"
-                    onclick="openAddJobModal()">
-                + Add New Intership Post
-            </button>
+                <button
+                    class="add-job-btn"
+                    onclick="openAddJobModal()"
+                >
+                    + Add New Internship Post
+                </button>
 
-        </div>
+            </div>
+        {% endif %}
 
-
-        <!-- =====================================
-             JOB 1
-        ====================================== -->
+        <!-- JOB 1 -->
 
         <div class="job-card">
 
@@ -647,25 +669,30 @@
                         ABC TECHNOLOGIES
                     </span>
 
+
                     <span class="badge">
                         Full-time
                     </span>
 
-                    <a href="#"
-                       class="job-title"
-                       onclick="showDetails(
-                           'Software Developer',
-                           'ABC Technologies',
-                           'Full-time',
-                           'Dhaka, Bangladesh',
-                           'BDT 40,000 - 60,000',
-                           'Aug 08',
-                           'Aug 30',
-                           'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
-                           ['Full-time', 'Software', 'Technology']
-                       ); return false;">
+
+                    <a
+                        href="#"
+                        class="job-title"
+                        onclick="showDetails(
+                            'Software Developer',
+                            'ABC Technologies',
+                            'Full-time',
+                            'Dhaka, Bangladesh',
+                            'BDT 40,000 - 60,000',
+                            'Aug 08',
+                            'Aug 30',
+                            'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
+                            ['Full-time', 'Software', 'Technology']
+                        ); return false;"
+                    >
                         Software Developer
                     </a>
+
 
                     <div class="meta">
 
@@ -683,8 +710,11 @@
 
                 </div>
 
-                <button class="bookmark"
-                        onclick="bookmark(this)">
+
+                <button
+                    class="bookmark"
+                    onclick="bookmark(this)"
+                >
                     🔖
                 </button>
 
@@ -693,34 +723,37 @@
 
             <div class="actions">
 
-                <button class="btn"
-                        onclick="showDetails(
-                            'Software Developer',
-                            'ABC Technologies',
-                            'Full-time',
-                            'Dhaka, Bangladesh',
-                            'BDT 40,000 - 60,000',
-                            'Aug 08',
-                            'Aug 30',
-                            'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
-                            ['Full-time', 'Software', 'Technology']
-                        )">
+                <button
+                    class="btn"
+                    onclick="showDetails(
+                        'Software Developer',
+                        'ABC Technologies',
+                        'Full-time',
+                        'Dhaka, Bangladesh',
+                        'BDT 40,000 - 60,000',
+                        'Aug 08',
+                        'Aug 30',
+                        'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
+                        ['Full-time', 'Software', 'Technology']
+                    )"
+                >
                     Details
                 </button>
 
-                <a href="{% url 'add_page' %}"
-                class="btn hiring">
+                {% if user.is_authenticated %}        
+                <a
+                    href="{% url 'add_page' %}"
+                    class="btn hiring"
+                >
                     Hiring Panel
                 </a>
-
+                {% endif %}
             </div>
 
         </div>
 
 
-        <!-- =====================================
-             JOB 2
-        ====================================== -->
+        <!-- JOB 2 -->
 
         <div class="job-card">
 
@@ -732,25 +765,30 @@
                         XYZ SOLUTIONS
                     </span>
 
+
                     <span class="badge">
                         Internship
                     </span>
 
-                    <a href="#"
-                       class="job-title"
-                       onclick="showDetails(
-                           'Cyber Security Intern',
-                           'XYZ Solutions',
-                           'Internship',
-                           'Dhaka, Bangladesh',
-                           'BDT 15,000',
-                           'Aug 06',
-                           'Aug 25',
-                           'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
-                           ['Internship', 'Cyber Security', 'Networking']
-                       ); return false;">
+
+                    <a
+                        href="#"
+                        class="job-title"
+                        onclick="showDetails(
+                            'Cyber Security Intern',
+                            'XYZ Solutions',
+                            'Internship',
+                            'Dhaka, Bangladesh',
+                            'BDT 15,000',
+                            'Aug 06',
+                            'Aug 25',
+                            'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
+                            ['Internship', 'Cyber Security', 'Networking']
+                        ); return false;"
+                    >
                         Cyber Security Intern
                     </a>
+
 
                     <div class="meta">
 
@@ -768,8 +806,11 @@
 
                 </div>
 
-                <button class="bookmark"
-                        onclick="bookmark(this)">
+
+                <button
+                    class="bookmark"
+                    onclick="bookmark(this)"
+                >
                     🔖
                 </button>
 
@@ -778,25 +819,33 @@
 
             <div class="actions">
 
-                <button class="btn"
-                        onclick="showDetails(
-                            'Cyber Security Intern',
-                            'XYZ Solutions',
-                            'Internship',
-                            'Dhaka, Bangladesh',
-                            'BDT 15,000',
-                            'Aug 06',
-                            'Aug 25',
-                            'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
-                            ['Internship', 'Cyber Security', 'Networking']
-                        )">
+                <button
+                    class="btn"
+                    onclick="showDetails(
+                        'Cyber Security Intern',
+                        'XYZ Solutions',
+                        'Internship',
+                        'Dhaka, Bangladesh',
+                        'BDT 15,000',
+                        'Aug 06',
+                        'Aug 25',
+                        'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
+                        ['Internship', 'Cyber Security', 'Networking']
+                    )"
+                >
                     Details
                 </button>
 
-                <a href="{% url 'add_page' %}"
-                    class="btn hiring">
-                        Hiring Panel
-                    </a>
+
+        {% if user.is_authenticated %}        
+
+                <a
+                    href="{% url 'add_page' %}"
+                    class="btn hiring"
+                >
+                    Hiring Panel
+                </a>
+                {% endif %}
 
             </div>
 
@@ -808,20 +857,20 @@
 
 
 <!-- =========================================
-     JOB DETAILS OVERLAY
+     JOB DETAILS
 ========================================= -->
 
 <div id="details">
 
     <div class="details-box">
 
-        <button class="close"
-                onclick="closeDetails()">
+        <button
+            class="close"
+            onclick="closeDetails()"
+        >
             ✕
         </button>
 
-
-        <!-- HEADER -->
 
         <div class="overlay-header">
 
@@ -832,35 +881,38 @@
         </div>
 
 
-        <!-- COMPANY INFORMATION -->
-
         <div class="company-info">
 
             <div>
 
-                <div id="overlayJobTitle"
-                     class="overlay-job-title">
-                </div>
+                <div
+                    id="overlayJobTitle"
+                    class="overlay-job-title"
+                ></div>
+
 
                 <span class="company-name">
+
                     🏢
+
                     <span id="overlayCompany"></span>
+
                 </span>
 
             </div>
 
 
-            <a id="overlayApplyBtn"
-               href="#"
-               class="apply-btn"
-               onclick="alert('Application page opened')">
+            <a
+                id="overlayApplyBtn"
+                href="#"
+                class="apply-btn"
+                onclick="alert('Application page opened')"
+            >
                 Apply Now
             </a>
 
         </div>
 
-
-        <!-- JOB INFORMATION -->
 
         <div class="info-row">
 
@@ -870,8 +922,7 @@
                     LOCATION
                 </span>
 
-                <strong id="overlayAddress">
-                </strong>
+                <strong id="overlayAddress"></strong>
 
             </div>
 
@@ -882,8 +933,7 @@
                     TYPE
                 </span>
 
-                <strong id="overlayType">
-                </strong>
+                <strong id="overlayType"></strong>
 
             </div>
 
@@ -894,8 +944,7 @@
                     SALARY
                 </span>
 
-                <strong id="overlaySalary">
-                </strong>
+                <strong id="overlaySalary"></strong>
 
             </div>
 
@@ -906,8 +955,7 @@
                     POSTED
                 </span>
 
-                <strong id="overlayDate">
-                </strong>
+                <strong id="overlayDate"></strong>
 
             </div>
 
@@ -918,15 +966,12 @@
                     APPLY BY
                 </span>
 
-                <strong id="overlayLastDate">
-                </strong>
+                <strong id="overlayLastDate"></strong>
 
             </div>
 
         </div>
 
-
-        <!-- DESCRIPTION -->
 
         <div class="description-section">
 
@@ -934,17 +979,15 @@
                 Description
             </h6>
 
-            <p id="overlayDescription">
-            </p>
+            <p id="overlayDescription"></p>
 
         </div>
 
 
-        <!-- TAGS -->
-
-        <div id="overlayTags"
-             class="tags">
-        </div>
+        <div
+            id="overlayTags"
+            class="tags"
+        ></div>
 
     </div>
 
@@ -952,12 +995,13 @@
 
 
 <!-- =========================================
-     ADD NEW JOB MODAL
+     ADD JOB MODAL
 ========================================= -->
 
 <div id="addJobModal">
 
     <div class="add-job-box">
+
 
         <div class="modal-header">
 
@@ -965,25 +1009,27 @@
                 Post a New Job
             </h2>
 
-            <button class="modal-close"
-                    onclick="closeAddJobModal()">
+
+            <button
+                class="modal-close"
+                onclick="closeAddJobModal()"
+            >
                 ✕
             </button>
 
         </div>
 
 
-        <div id="successMessage"
-             class="success-message">
-
+        <div
+            id="successMessage"
+            class="success-message"
+        >
             Job post created successfully!
-
         </div>
 
 
         <form onsubmit="postStaticJob(event)">
 
-            <!-- JOB TITLE -->
 
             <div class="form-group">
 
@@ -991,16 +1037,16 @@
                     Job Title
                 </label>
 
-                <input type="text"
-                       id="newJobTitle"
-                       class="form-control"
-                       placeholder="e.g. Software Developer"
-                       required>
+                <input
+                    type="text"
+                    id="newJobTitle"
+                    class="form-control"
+                    placeholder="e.g. Software Developer"
+                    required
+                >
 
             </div>
 
-
-            <!-- COMPANY -->
 
             <div class="form-group">
 
@@ -1008,18 +1054,19 @@
                     Company Name
                 </label>
 
-                <input type="text"
-                       id="newCompany"
-                       class="form-control"
-                       placeholder="e.g. ABC Technologies"
-                       required>
+                <input
+                    type="text"
+                    id="newCompany"
+                    class="form-control"
+                    placeholder="e.g. ABC Technologies"
+                    required
+                >
 
             </div>
 
 
-            <!-- TYPE + LOCATION -->
-
             <div class="form-row">
+
 
                 <div class="form-group">
 
@@ -1027,9 +1074,12 @@
                         Job Type
                     </label>
 
-                    <select id="newJobType"
-                            class="form-control"
-                            required>
+
+                    <select
+                        id="newJobType"
+                        class="form-control"
+                        required
+                    >
 
                         <option value="">
                             Select Job Type
@@ -1058,20 +1108,22 @@
                         Location
                     </label>
 
-                    <input type="text"
-                           id="newLocation"
-                           class="form-control"
-                           placeholder="e.g. Dhaka, Bangladesh"
-                           required>
+
+                    <input
+                        type="text"
+                        id="newLocation"
+                        class="form-control"
+                        placeholder="e.g. Dhaka, Bangladesh"
+                        required
+                    >
 
                 </div>
 
             </div>
 
 
-            <!-- SALARY + DEADLINE -->
-
             <div class="form-row">
+
 
                 <div class="form-group">
 
@@ -1079,11 +1131,14 @@
                         Salary
                     </label>
 
-                    <input type="text"
-                           id="newSalary"
-                           class="form-control"
-                           placeholder="e.g. BDT 40,000 - 60,000"
-                           required>
+
+                    <input
+                        type="text"
+                        id="newSalary"
+                        class="form-control"
+                        placeholder="e.g. BDT 40,000 - 60,000"
+                        required
+                    >
 
                 </div>
 
@@ -1094,17 +1149,18 @@
                         Application Deadline
                     </label>
 
-                    <input type="date"
-                           id="newDeadline"
-                           class="form-control"
-                           required>
+
+                    <input
+                        type="date"
+                        id="newDeadline"
+                        class="form-control"
+                        required
+                    >
 
                 </div>
 
             </div>
 
-
-            <!-- DESCRIPTION -->
 
             <div class="form-group">
 
@@ -1112,15 +1168,16 @@
                     Job Description
                 </label>
 
-                <textarea id="newDescription"
-                          class="form-control"
-                          placeholder="Enter job description..."
-                          required></textarea>
+
+                <textarea
+                    id="newDescription"
+                    class="form-control"
+                    placeholder="Enter job description..."
+                    required
+                ></textarea>
 
             </div>
 
-
-            <!-- TAGS -->
 
             <div class="form-group">
 
@@ -1128,26 +1185,32 @@
                     Tags
                 </label>
 
-                <input type="text"
-                       id="newTags"
-                       class="form-control"
-                       placeholder="e.g. Software, Technology, Programming">
+
+                <input
+                    type="text"
+                    id="newTags"
+                    class="form-control"
+                    placeholder="e.g. Software, Technology, Programming"
+                >
 
             </div>
 
 
-            <!-- BUTTONS -->
-
             <div class="modal-actions">
 
-                <button type="button"
-                        class="btn btn-cancel"
-                        onclick="closeAddJobModal()">
+                <button
+                    type="button"
+                    class="btn btn-cancel"
+                    onclick="closeAddJobModal()"
+                >
                     Cancel
                 </button>
 
-                <button type="submit"
-                        class="btn btn-primary">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
                     Post Job
                 </button>
 
@@ -1166,9 +1229,6 @@
 
 <script>
 
-/* =========================================
-   JOB DETAILS
-========================================= */
 
 function showDetails(
     title,
@@ -1199,8 +1259,6 @@ function showDetails(
     document.getElementById("overlayDescription").textContent = description;
 
 
-    /* CREATE TAGS */
-
     const tagContainer =
         document.getElementById("overlayTags");
 
@@ -1227,12 +1285,9 @@ function showDetails(
 
     document.getElementById("details").style.display =
         "block";
+
 }
 
-
-/* =========================================
-   CLOSE DETAILS
-========================================= */
 
 function closeDetails() {
 
@@ -1241,10 +1296,6 @@ function closeDetails() {
 
 }
 
-
-/* =========================================
-   BOOKMARK
-========================================= */
 
 function bookmark(button) {
 
@@ -1255,10 +1306,6 @@ function bookmark(button) {
 
 }
 
-
-/* =========================================
-   ADD JOB MODAL
-========================================= */
 
 function openAddJobModal() {
 
@@ -1275,10 +1322,6 @@ function closeAddJobModal() {
 
 }
 
-
-/* =========================================
-   STATIC POST JOB
-========================================= */
 
 function postStaticJob(event) {
 
@@ -1302,10 +1345,6 @@ function postStaticJob(event) {
 
 }
 
-
-/* =========================================
-   CLOSE OVERLAYS WHEN CLICKING OUTSIDE
-========================================= */
 
 window.onclick = function(event) {
 
@@ -1333,5 +1372,5 @@ window.onclick = function(event) {
 
 </script>
 
-</body>
-</html>
+
+{% endblock %}

@@ -1,0 +1,225 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}InternHub{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'accounts/css/style.css' %}"
+    >
+
+    {% block css %}{% endblock %}
+
+</head>
+
+
+<body>
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="navbar-container">
+
+        <!-- LOGO -->
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="logo"
+        >
+            Intern<span>Hub</span>
+        </a>
+        <nav class="nav-links">
+
+            <a href="{% url 'index' %}">
+                Home
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#features">
+                Features
+            </a>
+
+            <a href="#contact">
+                Contact
+            </a>
+
+        </nav>
+
+
+
+        {% if user.is_authenticated %}
+
+            <nav class="nav-links">
+
+                {% if user.role == "STUDENT" %}
+
+                    <a href="{% url 'student_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% elif user.role == "COMPANY" %}
+
+                    <a href="{% url 'company_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% elif user.role == "ADMIN" %}
+
+                    <a href="{% url 'admin_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% endif %}
+
+
+                <!-- USER INFO -->
+
+                <div class="nav-user">
+
+                    <div class="nav-avatar">
+                        {{ user.username|first|upper }}
+                    </div>
+
+                    <div class="nav-user-info">
+
+                        <strong>
+                            {{ user.username }}
+                        </strong>
+
+                        <span>
+                            {{ user.role|title }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="logout-button"
+                >
+                    Logout
+                </a>
+
+            </nav>
+
+
+        {% else %}
+
+            <!-- GUEST NAVIGATION -->
+
+            <nav class="nav-links">
+                <a href="{% url 'login' %}?role=admin" class="admin-button">Admin</a>
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="nav-button"
+                >
+                    Get Started
+                </a>
+
+            </nav>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MESSAGES
+===================================================== -->
+
+{% if messages %}
+
+    <div class="messages-container">
+
+        {% for message in messages %}
+
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+
+<!-- =====================================================
+     PAGE CONTENT
+===================================================== -->
+
+<main>
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <h3>
+                Intern<span>Hub</span>
+            </h3>
+
+            <p>
+                Internship management made simple.
+            </p>
+
+        </div>
+
+
+        <div class="footer-right">
+
+            © 2026 Taj mim
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

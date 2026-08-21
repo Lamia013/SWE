@@ -1,0 +1,56 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}
+Admin Dashboard | InternHub
+{% endblock %}
+
+
+{% block content %}
+
+<section class="dashboard-page">
+
+    <div class="dashboard-container">
+
+        <div class="dashboard-header">
+
+            <span class="section-label">
+                ADMIN PORTAL
+            </span>
+
+            <h1>
+                Welcome, {{ user.username }}!
+            </h1>
+
+            <p>
+                Manage users, companies, students, and
+                internship activities.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-icon">
+                ⚙
+            </div>
+
+            <div>
+
+                <h2>
+                    Admin Dashboard
+                </h2>
+
+                <p>
+                    Administrative controls will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

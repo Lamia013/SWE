@@ -1,0 +1,427 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard | InternHub</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'accounts/css/dashboard.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="navbar-inner">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="brand"
+            >
+
+                <div class="brand-logo">
+                    IH
+                </div>
+
+                <span>
+                    InternHub
+                </span>
+
+            </a>
+
+
+            <div class="nav-right">
+
+                <div class="user-info">
+
+                    <div class="avatar">
+
+                        {{ user.username|first|upper }}
+
+                    </div>
+
+                    <div class="user-details">
+
+                        <strong>
+                            {{ user.username }}
+                        </strong>
+
+                        <span>
+                            {{ role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="logout-button"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN -->
+
+    <main class="dashboard-container">
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome-section">
+
+            <div>
+
+                <span class="eyebrow">
+                    {{ role|upper }} DASHBOARD
+                </span>
+
+                <h1>
+                    Welcome back,
+                    {{ user.first_name|default:user.username }}
+                </h1>
+
+                <p>
+                    Manage your internship activities
+                    from one place.
+                </p>
+
+            </div>
+
+
+            <div class="role-badge">
+
+                {{ role }}
+
+            </div>
+
+        </section>
+
+
+        <!-- STUDENT -->
+
+        {% if user.role == "STUDENT" %}
+
+            <section class="dashboard-grid">
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon blue">
+                        I
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Find Internships
+                        </h3>
+
+                        <p>
+                            Explore available internship
+                            opportunities and find the right
+                            one for your career.
+                        </p>
+
+                        <span class="card-link">
+                            Explore internships →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon purple">
+                        A
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            My Applications
+                        </h3>
+
+                        <p>
+                            Track all your applications and
+                            monitor their current status.
+                        </p>
+
+                        <span class="card-link">
+                            View applications →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon green">
+                        P
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Student Profile
+                        </h3>
+
+                        <p>
+                            Manage your personal information,
+                            skills, education, and CV.
+                        </p>
+
+                        <span class="card-link">
+                            View profile →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </section>
+
+
+            <section class="quick-section">
+
+                <h2>
+                    Getting started
+                </h2>
+
+                <div class="progress-card">
+
+                    <div>
+
+                        <strong>
+                            Complete your profile
+                        </strong>
+
+                        <p>
+                            A complete profile can help companies
+                            understand your skills and experience.
+                        </p>
+
+                    </div>
+
+                    <span>
+                        0%
+                    </span>
+
+                </div>
+
+            </section>
+
+
+        <!-- COMPANY -->
+
+        {% elif user.role == "COMPANY" %}
+
+            <section class="dashboard-grid">
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon blue">
+                        +
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Post Internship
+                        </h3>
+
+                        <p>
+                            Create internship opportunities and
+                            connect with qualified students.
+                        </p>
+
+                        <span class="card-link">
+                            Post internship →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon purple">
+                        A
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Applications
+                        </h3>
+
+                        <p>
+                            Review student applications and
+                            manage your recruitment process.
+                        </p>
+
+                        <span class="card-link">
+                            View applications →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon green">
+                        C
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Company Profile
+                        </h3>
+
+                        <p>
+                            Manage your company information
+                            and public profile.
+                        </p>
+
+                        <span class="card-link">
+                            View profile →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </section>
+
+
+        <!-- ADMIN -->
+
+        {% elif user.role == "ADMIN" %}
+
+            <section class="dashboard-grid">
+
+
+                <a
+                    href="{% url 'admin:index' %}"
+                    class="dashboard-card"
+                >
+
+                    <div class="card-icon blue">
+                        U
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Manage Users
+                        </h3>
+
+                        <p>
+                            Manage students, companies,
+                            and administrator accounts.
+                        </p>
+
+                        <span class="card-link">
+                            Open admin panel →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon purple">
+                        I
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Manage Internships
+                        </h3>
+
+                        <p>
+                            Review and manage internship
+                            opportunities on the platform.
+                        </p>
+
+                        <span class="card-link">
+                            Manage internships →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#" class="dashboard-card">
+
+                    <div class="card-icon green">
+                        A
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Applications
+                        </h3>
+
+                        <p>
+                            Monitor internship applications
+                            across the platform.
+                        </p>
+
+                        <span class="card-link">
+                            View applications →
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </section>
+
+        {% endif %}
+
+
+    </main>
+
+</body>
+
+</html>

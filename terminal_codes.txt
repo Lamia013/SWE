@@ -2,7 +2,7 @@ django-admin startproject internship
 cd internship
 
 py manage.py makemigrations internship
-py manage.py createsuperuser (lamia, lj@g.com, password aa@12345)
+py manage.py createsuperuser (lamia, lj@g.com, password Aa@123456)
 
 py manage.py makemigrations internship
 py manage.py migrate
