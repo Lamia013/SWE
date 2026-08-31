@@ -1,6 +1,5 @@
 {% extends "accounts/base.html" %}
 
-
 {% block title %}
 Job Portal
 {% endblock %}
@@ -11,561 +10,363 @@ Job Portal
 <style>
 
     * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
     }
 
-
     body {
-        background-color: #f8faff;
-        font-family: 'Segoe UI', sans-serif;
-        margin: 0;
-        color: #0f172a;
+        font-family: Arial, sans-serif;
+        background: #f5f7fb;
+        color: #1e293b;
     }
 
+    /* ================= MESSAGES ================= */
 
-    /* PAGE */
-
-    .page {
-        display: flex;
-        gap: 25px;
+    .messages {
+        width: 86%;
         max-width: 1100px;
-        margin: 30px auto;
-        padding: 0 20px;
+        margin: 20px auto;
     }
 
-
-    /* FILTER */
-
-    .filter {
-        width: 240px;
+    .message {
         background: white;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        height: fit-content;
-    }
-
-
-    .filter h3 {
-        margin-top: 0;
-        margin-bottom: 20px;
-    }
-
-
-    .filter input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #e2e8f0;
+        padding: 15px 20px;
         border-radius: 8px;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+
+        box-shadow:
+            0 3px 10px rgba(0, 0, 0, 0.06);
     }
 
 
-    .filter label {
-        display: block;
-        margin: 10px 0;
-        color: #475569;
-    }
+    /* ================= HERO ================= */
 
+    .hero {
+        min-height: 600px;
 
-    /* GENERAL BUTTON */
-
-    .btn {
-        width: 100%;
-        padding: 10px;
-        border-radius: 9px;
-        border: 1px solid #e2e8f0;
-        background: white;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-
-    .btn-primary {
-        background: #2563eb;
-        color: white;
-        border: none;
-        margin-top: 10px;
-    }
-
-
-    .btn-primary:hover {
-        background: #1d4ed8;
-    }
-
-
-    /* JOB AREA */
-
-    .jobs {
-        flex: 1;
-    }
-
-
-    /* ADD JOB BUTTON */
-
-    .add-job-container {
         display: flex;
-        justify-content: flex-end;
-        margin-bottom: 20px;
-    }
-
-
-    .add-job-btn {
-        background: #2563eb;
-        color: white;
-        border: none;
-        padding: 11px 18px;
-        border-radius: 9px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-
-    .add-job-btn:hover {
-        background: #1d4ed8;
-    }
-
-
-    /* JOB CARD */
-
-    .job-card {
-        background: white;
-        border: 1px solid #eef2f6;
-        border-radius: 18px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-
-    .job-header {
-        display: flex;
-        justify-content: space-between;
-    }
-
-
-    .company {
-        color: #2563eb;
-        font-weight: 700;
-        font-size: 14px;
-    }
-
-
-    .badge {
-        background: #f1f3f5;
-        color: #64748b;
-        font-size: 11px;
-        padding: 4px 10px;
-        border-radius: 6px;
-        margin-left: 8px;
-    }
-
-
-    .job-title {
-        display: block;
-        color: #0f172a;
-        font-weight: 700;
-        font-size: 20px;
-        margin-top: 8px;
-        text-decoration: none;
-    }
-
-
-    .job-title:hover {
-        color: #2563eb;
-    }
-
-
-    .meta {
-        color: #64748b;
-        font-size: 14px;
-        margin-top: 12px;
-    }
-
-
-    .salary {
-        color: #16a34a;
-        font-weight: 600;
-        margin-left: 15px;
-    }
-
-
-    .actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-    }
-
-
-    .actions button {
-        flex: 1;
-    }
-
-
-    .actions .btn {
-        flex: 1;
-        text-align: center;
-        text-decoration: none;
-    }
-
-
-    .hiring {
-        color: #16a34a;
-        border-color: #dcfce7;
-    }
-
-
-    .hiring:hover {
-        background: #f0fdf4;
-    }
-
-
-    .bookmark {
-        border: none;
-        background: none;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-
-    /* JOB DETAILS OVERLAY */
-
-    #details {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(15,23,42,0.4);
-        padding: 50px 15px;
-        z-index: 1000;
-        overflow-y: auto;
-    }
-
-
-    .details-box {
-        background: white;
-        max-width: 650px;
-        margin: auto;
-        padding: 25px;
-        border-radius: 16px;
-        position: relative;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-    }
-
-
-    .overlay-header {
-        margin-bottom: 20px;
-    }
-
-
-    .overlay-header h5 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-
-    .close {
-        position: absolute;
-        right: 18px;
-        top: 15px;
-        border: none;
-        background: none;
-        font-size: 22px;
-        color: #64748b;
-        cursor: pointer;
-    }
-
-
-    .close:hover {
-        color: #0f172a;
-    }
-
-
-    .company-info {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
+        justify-content: center;
+
+        text-align: center;
+
+        padding: 70px 20px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #dbeafe,
+                #eff6ff
+            );
     }
 
+    .hero-content {
+        max-width: 800px;
+    }
 
-    .overlay-job-title {
+    .hero h1 {
+        font-size: 58px;
+        line-height: 1.1;
+        margin-bottom: 25px;
         color: #0f172a;
-        font-weight: 600;
+    }
+
+    .hero h1 span {
+        color: #2563eb;
+    }
+
+    .hero p {
         font-size: 20px;
-        margin-bottom: 5px;
-    }
-
-
-    .company-name {
+        line-height: 1.8;
         color: #64748b;
-        font-size: 14px;
+        margin-bottom: 35px;
     }
 
-
-    .apply-btn {
-        background: #2563eb;
-        color: white;
-        padding: 9px 16px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-
-    .apply-btn:hover {
-        background: #1d4ed8;
-        color: white;
-    }
-
-
-    .info-row {
+    .hero-buttons {
         display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        margin: 18px 0;
-        background: #f8fafc;
-        padding: 14px;
-        border-radius: 12px;
+        justify-content: center;
+        gap: 15px;
         flex-wrap: wrap;
     }
 
-
-    .info-row div {
-        min-width: 90px;
-    }
-
-
-    .info-row div span {
-        color: #64748b;
-        display: block;
-        font-size: 10px;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
-
-
-    .info-row div strong {
-        font-size: 13px;
-        color: #0f172a;
-    }
-
-
-    .description-section {
-        margin-top: 20px;
-    }
-
-
-    .description-section h6 {
-        font-size: 15px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-
-    .description-section p {
-        color: #64748b;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-
-    .tags {
-        margin-top: 15px;
-    }
-
-
-    .tag {
-        background: #f1f3f5;
-        color: #0f172a;
-        font-size: 12px;
-        padding: 5px 10px;
-        border-radius: 8px;
+    .primary-btn {
         display: inline-block;
-        margin-right: 6px;
-        margin-top: 6px;
+
+        padding: 15px 30px;
+
+        background: #2563eb;
+
+        color: white;
+        text-decoration: none;
+
+        border-radius: 8px;
+
+        font-weight: bold;
+
+        transition: 0.2s;
     }
 
-
-    /* ADD JOB MODAL */
-
-    #addJobModal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(15,23,42,0.45);
-        padding: 40px 15px;
-        z-index: 2000;
-        overflow-y: auto;
+    .primary-btn:hover {
+        background: #1d4ed8;
+        color: white;
     }
 
+    .secondary-btn {
+        display: inline-block;
 
-    .add-job-box {
+        padding: 15px 30px;
+
         background: white;
-        max-width: 650px;
-        margin: auto;
-        padding: 28px;
-        border-radius: 16px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+
+        color: #2563eb;
+
+        text-decoration: none;
+
+        border: 2px solid #2563eb;
+
+        border-radius: 8px;
+
+        font-weight: bold;
+
+        transition: 0.2s;
+    }
+
+    .secondary-btn:hover {
+        background: #2563eb;
+        color: white;
     }
 
 
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    /* ================= FEATURES ================= */
+
+    .section {
+        padding: 80px 7%;
+        text-align: center;
+    }
+
+    .section h2 {
+        font-size: 38px;
+        margin-bottom: 15px;
+    }
+
+    .section-subtitle {
+        color: #64748b;
+        font-size: 17px;
+        margin-bottom: 45px;
+    }
+
+    .cards {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+
+        gap: 25px;
+
+        max-width: 1100px;
+
+        margin: auto;
+    }
+
+    .card {
+        background: white;
+
+        padding: 35px 25px;
+
+        border-radius: 15px;
+
+        box-shadow:
+            0 5px 20px rgba(0, 0, 0, 0.07);
+
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-7px);
+
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.10);
+    }
+
+    .icon {
+        font-size: 45px;
         margin-bottom: 20px;
     }
 
-
-    .modal-header h2 {
-        margin: 0;
+    .card h3 {
         font-size: 22px;
-    }
-
-
-    .modal-close {
-        border: none;
-        background: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #64748b;
-    }
-
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 7px;
-        color: #334155;
-    }
-
-
-    .form-control {
-        width: 100%;
-        padding: 11px 12px;
-        border: 1px solid #dbe2ea;
-        border-radius: 8px;
-        font-family: inherit;
-        font-size: 14px;
-        outline: none;
-    }
-
-
-    .form-control:focus {
-        border-color: #2563eb;
-    }
-
-
-    textarea.form-control {
-        min-height: 110px;
-        resize: vertical;
-    }
-
-
-    .form-row {
-        display: flex;
-        gap: 15px;
-    }
-
-
-    .form-row .form-group {
-        flex: 1;
-    }
-
-
-    .modal-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-
-    .modal-actions button {
-        flex: 1;
-    }
-
-
-    .btn-cancel {
-        background: white;
-        color: #475569;
-        border: 1px solid #cbd5e1;
-    }
-
-
-    .btn-cancel:hover {
-        background: #f8fafc;
-    }
-
-
-    .success-message {
-        display: none;
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px;
-        border-radius: 8px;
         margin-bottom: 15px;
-        font-weight: 600;
+    }
+
+    .card p {
+        color: #64748b;
+        line-height: 1.7;
     }
 
 
-    /* RESPONSIVE */
+    /* ================= JOB SECTION ================= */
 
-    @media (max-width: 800px) {
+    .job-section {
+        background: #f8fafc;
+        padding: 80px 7%;
+    }
 
-        .page {
-            flex-direction: column;
-        }
+    .job-title {
+        text-align: center;
+        font-size: 38px;
+        margin-bottom: 45px;
+    }
 
+    .jobs {
+        max-width: 1100px;
 
-        .filter {
-            width: auto;
-        }
+        margin: auto;
 
+        display: grid;
 
-        .form-row {
-            flex-direction: column;
-            gap: 0;
-        }
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(280px, 1fr)
+            );
 
+        gap: 25px;
+    }
 
-        .add-job-container {
-            justify-content: stretch;
-        }
+    .job-card {
+        background: white;
 
+        padding: 30px;
 
-        .add-job-btn {
-            width: 100%;
-        }
+        border-radius: 15px;
 
+        box-shadow:
+            0 5px 20px rgba(0, 0, 0, 0.07);
+
+        transition: 0.3s;
+    }
+
+    .job-card:hover {
+        transform: translateY(-5px);
+
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.10);
+    }
+
+    .job-card h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .organization {
+        color: #2563eb;
+
+        font-weight: bold;
+
+        margin-bottom: 15px;
+    }
+
+    .job-card p {
+        color: #64748b;
+
+        line-height: 1.6;
+
+        margin-bottom: 10px;
+    }
+
+    .job-info {
+        margin-top: 15px;
+
+        color: #475569;
+
+        line-height: 1.8;
+    }
+
+    .job-button {
+        display: inline-block;
+
+        margin-top: 20px;
+
+        padding: 11px 20px;
+
+        background: #2563eb;
+
+        color: white;
+
+        text-decoration: none;
+
+        border-radius: 7px;
+
+        font-weight: bold;
+
+        transition: 0.2s;
+    }
+
+    .job-button:hover {
+        background: #1d4ed8;
+        color: white;
     }
 
 
-    @media (max-width: 600px) {
+    /* ================= CTA ================= */
 
-        .company-info {
-            align-items: flex-start;
-            flex-direction: column;
+    .cta {
+        padding: 80px 20px;
+
+        text-align: center;
+
+        background: #1e293b;
+
+        color: white;
+    }
+
+    .cta h2 {
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
+    .cta p {
+        color: #cbd5e1;
+
+        font-size: 18px;
+
+        margin-bottom: 30px;
+    }
+
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 768px) {
+
+        .hero {
+            min-height: 500px;
+            padding: 60px 20px;
         }
 
-
-        .apply-btn {
-            width: 100%;
-            text-align: center;
+        .hero h1 {
+            font-size: 40px;
         }
 
+        .hero p {
+            font-size: 17px;
+        }
 
-        .info-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .section h2,
+        .job-title {
+            font-size: 30px;
+        }
+
+        .section,
+        .job-section {
+            padding: 60px 5%;
+        }
+
+        .cta h2 {
+            font-size: 30px;
         }
 
     }
@@ -577,800 +378,381 @@ Job Portal
 
 {% block content %}
 
+<!-- ================= MESSAGES ================= -->
 
-<!-- =========================================
-     MAIN PAGE
-========================================= -->
+{% if messages %}
 
-<div class="page">
+    <div class="messages">
 
+        {% for message in messages %}
 
-    <!-- FILTER SIDEBAR -->
+            <div class="message">
+                {{ message }}
+            </div>
 
-    <div class="filter">
-
-        <h3>
-            Search & Filter
-        </h3>
-
-
-        <input
-            type="text"
-            placeholder="Search jobs"
-        >
-
-
-        <strong>
-            Job Type
-        </strong>
-
-
-        <label>
-            <input type="checkbox">
-            Full-time
-        </label>
-
-
-        <label>
-            <input type="checkbox">
-            Part-time
-        </label>
-
-
-        <label>
-            <input type="checkbox">
-            Internship
-        </label>
-
-
-        <button class="btn btn-primary">
-            Apply Filters
-        </button>
-
-
-        <button
-            class="btn"
-            style="margin-top:8px;"
-        >
-            Clear Filters
-        </button>
+        {% endfor %}
 
     </div>
 
+{% endif %}
 
-    <!-- JOB LIST -->
 
-    <div class="jobs">
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
 
         {% if user.is_authenticated %}
-            <!-- ADD NEW JOB -->
 
-            <div class="add-job-container">
+            <h1>
+                Welcome back,
+                <span>{{ user.username }}</span>
+            </h1>
 
-                <button
-                    class="add-job-btn"
-                    onclick="openAddJobModal()"
-                >
-                    + Add New Internship Post
-                </button>
+            <p>
+                Explore new opportunities and take
+                the next step toward your career goals.
+            </p>
+
+
+            {% if user.role == 'STUDENT' %}
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="{% url 'job_list' %}"
+                        class="primary-btn">
+
+                        Find Jobs
+
+                    </a>
+
+                    <a
+                        href="{% url 'applicant_dashboard' %}"
+                        class="secondary-btn">
+
+                        My Dashboard
+
+                    </a>
+
+                </div>
+
+
+            {% elif user.role == 'COMPANY' %}
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="{% url 'job_list' %}"
+                        class="primary-btn">
+
+                        View Opportunities
+
+                    </a>
+
+                    <a
+                        href="{% url 'organization_dashboard' %}"
+                        class="secondary-btn">
+
+                        Organization Dashboard
+
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="{% url 'job_list' %}"
+                        class="primary-btn">
+
+                        Explore Jobs
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <h1>
+                Find Your
+                <span>Next Opportunity</span>
+            </h1>
+
+            <p>
+                Discover internships, jobs and career
+                opportunities from trusted organizations.
+                Build your future with Opportunity Portal.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="{% url 'job_list' %}"
+                    class="primary-btn">
+
+                    Explore Opportunities
+
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="secondary-btn">
+
+                    Create Account
+
+                </a>
 
             </div>
+
         {% endif %}
 
-        <!-- JOB 1 -->
+    </div>
 
-        <div class="job-card">
-
-            <div class="job-header">
-
-                <div>
-
-                    <span class="company">
-                        ABC TECHNOLOGIES
-                    </span>
+</section>
 
 
-                    <span class="badge">
-                        Full-time
-                    </span>
+<!-- ================= FEATURES ================= -->
+
+<section class="section">
+
+    <h2>
+        Why Choose Opportunity Portal?
+    </h2>
+
+    <p class="section-subtitle">
+        Everything you need to find and manage
+        career opportunities.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="icon">
+                🔎
+            </div>
+
+            <h3>
+                Find Opportunities
+            </h3>
+
+            <p>
+                Explore internships and jobs that
+                match your skills, interests and
+                career goals.
+            </p>
+
+        </div>
 
 
-                    <a
-                        href="#"
-                        class="job-title"
-                        onclick="showDetails(
-                            'Software Developer',
-                            'ABC Technologies',
-                            'Full-time',
-                            'Dhaka, Bangladesh',
-                            'BDT 40,000 - 60,000',
-                            'Aug 08',
-                            'Aug 30',
-                            'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
-                            ['Full-time', 'Software', 'Technology']
-                        ); return false;"
-                    >
-                        Software Developer
-                    </a>
+        <div class="card">
+
+            <div class="icon">
+                📄
+            </div>
+
+            <h3>
+                Easy Application
+            </h3>
+
+            <p>
+                Submit your application and resume
+                easily through our simple application
+                system.
+            </p>
+
+        </div>
 
 
-                    <div class="meta">
+        <div class="card">
 
-                        📍 Dhaka, Bangladesh
+            <div class="icon">
+                🔖
+            </div>
 
-                        <span class="salary">
-                            BDT 40,000 - 60,000
-                        </span>
+            <h3>
+                Bookmark Jobs
+            </h3>
 
-                        <span>
-                            · Posted Aug 08
-                        </span>
+            <p>
+                Save interesting opportunities and
+                access them anytime from your dashboard.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                📊
+            </div>
+
+            <h3>
+                Manage Applications
+            </h3>
+
+            <p>
+                Keep track of your applications and
+                manage your career opportunities
+                from one place.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LATEST JOBS ================= -->
+
+<section class="job-section">
+
+    <h2 class="job-title">
+        Latest Opportunities
+    </h2>
+
+    {% if jobs %}
+
+        <div class="jobs">
+
+            {% for job in jobs %}
+
+                <div class="job-card">
+
+                    <h3>
+                        {{ job.title }}
+                    </h3>
+
+                    <div class="organization">
+                        {{ job.organization }}
+                    </div>
+
+                    <p>
+                        {{ job.description|truncatewords:20 }}
+                    </p>
+
+                    <div class="job-info">
+
+                        📍 {{ job.location }}
+
+                        <br>
+
+                        💼 {{ job.job_type }}
+
+                        {% if job.salary %}
+                            <br>
+                            💰 {{ job.salary }}
+                        {% endif %}
+
+                        <br>
+
+                        📅 Deadline:
+                        {{ job.deadline }}
 
                     </div>
 
-                </div>
-
-
-                <button
-                    class="bookmark"
-                    onclick="bookmark(this)"
-                >
-                    🔖
-                </button>
-
-            </div>
-
-
-            <div class="actions">
-
-                <button
-                    class="btn"
-                    onclick="showDetails(
-                        'Software Developer',
-                        'ABC Technologies',
-                        'Full-time',
-                        'Dhaka, Bangladesh',
-                        'BDT 40,000 - 60,000',
-                        'Aug 08',
-                        'Aug 30',
-                        'Develop and maintain web applications. Work with the development team to design, build, test, and maintain software applications.',
-                        ['Full-time', 'Software', 'Technology']
-                    )"
-                >
-                    Details
-                </button>
-
-                {% if user.is_authenticated %}        
-                <a
-                    href="{% url 'add_page' %}"
-                    class="btn hiring"
-                >
-                    Hiring Panel
-                </a>
-                {% endif %}
-            </div>
-
-        </div>
-
-
-        <!-- JOB 2 -->
-
-        <div class="job-card">
-
-            <div class="job-header">
-
-                <div>
-
-                    <span class="company">
-                        XYZ SOLUTIONS
-                    </span>
-
-
-                    <span class="badge">
-                        Internship
-                    </span>
-
-
                     <a
-                        href="#"
-                        class="job-title"
-                        onclick="showDetails(
-                            'Cyber Security Intern',
-                            'XYZ Solutions',
-                            'Internship',
-                            'Dhaka, Bangladesh',
-                            'BDT 15,000',
-                            'Aug 06',
-                            'Aug 25',
-                            'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
-                            ['Internship', 'Cyber Security', 'Networking']
-                        ); return false;"
-                    >
-                        Cyber Security Intern
+                        href="{% url 'apply_job' job.id %}"
+                        class="job-button">
+
+                        View & Apply
+
                     </a>
 
-
-                    <div class="meta">
-
-                        📍 Dhaka, Bangladesh
-
-                        <span class="salary">
-                            BDT 15,000
-                        </span>
-
-                        <span>
-                            · Posted Aug 06
-                        </span>
-
-                    </div>
-
                 </div>
 
-
-                <button
-                    class="bookmark"
-                    onclick="bookmark(this)"
-                >
-                    🔖
-                </button>
-
-            </div>
-
-
-            <div class="actions">
-
-                <button
-                    class="btn"
-                    onclick="showDetails(
-                        'Cyber Security Intern',
-                        'XYZ Solutions',
-                        'Internship',
-                        'Dhaka, Bangladesh',
-                        'BDT 15,000',
-                        'Aug 06',
-                        'Aug 25',
-                        'Assist with security monitoring, network analysis, vulnerability assessment, and other cyber security activities.',
-                        ['Internship', 'Cyber Security', 'Networking']
-                    )"
-                >
-                    Details
-                </button>
-
-
-        {% if user.is_authenticated %}        
-
-                <a
-                    href="{% url 'add_page' %}"
-                    class="btn hiring"
-                >
-                    Hiring Panel
-                </a>
-                {% endif %}
-
-            </div>
+            {% endfor %}
 
         </div>
 
-    </div>
+    {% else %}
 
-</div>
+        <div style="
+            text-align: center;
+            background: white;
+            max-width: 700px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        ">
 
+            <h3>
+                No opportunities available yet.
+            </h3>
 
-<!-- =========================================
-     JOB DETAILS
-========================================= -->
+            <p style="
+                margin-top: 10px;
+                color: #64748b;
+            ">
 
-<div id="details">
+                New opportunities will appear here
+                when organizations post them.
 
-    <div class="details-box">
-
-        <button
-            class="close"
-            onclick="closeDetails()"
-        >
-            ✕
-        </button>
-
-
-        <div class="overlay-header">
-
-            <h5>
-                Job Details
-            </h5>
-
-        </div>
-
-
-        <div class="company-info">
-
-            <div>
-
-                <div
-                    id="overlayJobTitle"
-                    class="overlay-job-title"
-                ></div>
-
-
-                <span class="company-name">
-
-                    🏢
-
-                    <span id="overlayCompany"></span>
-
-                </span>
-
-            </div>
-
-
-            <a
-                id="overlayApplyBtn"
-                href="#"
-                class="apply-btn"
-                onclick="alert('Application page opened')"
-            >
-                Apply Now
-            </a>
+            </p>
 
         </div>
 
+    {% endif %}
 
-        <div class="info-row">
+</section>
 
-            <div>
 
-                <span>
-                    LOCATION
-                </span>
+<!-- ================= CTA ================= -->
 
-                <strong id="overlayAddress"></strong>
+<section class="cta">
 
-            </div>
+    {% if user.is_authenticated %}
 
+        <h2>
+            Ready for your next opportunity?
+        </h2>
 
-            <div>
+        <p>
+            Explore available jobs and take the
+            next step in your career.
+        </p>
 
-                <span>
-                    TYPE
-                </span>
+        <a
+            href="{% url 'job_list' %}"
+            class="primary-btn">
 
-                <strong id="overlayType"></strong>
+            Explore Jobs
 
-            </div>
+        </a>
 
+    {% else %}
 
-            <div>
+        <h2>
+            Start Your Career Journey Today
+        </h2>
 
-                <span>
-                    SALARY
-                </span>
+        <p>
+            Create your free account and discover
+            exciting opportunities.
+        </p>
 
-                <strong id="overlaySalary"></strong>
+        <a
+            href="{% url 'register' %}"
+            class="primary-btn">
 
-            </div>
+            Get Started
 
+        </a>
 
-            <div>
+    {% endif %}
 
-                <span>
-                    POSTED
-                </span>
-
-                <strong id="overlayDate"></strong>
-
-            </div>
-
-
-            <div>
-
-                <span>
-                    APPLY BY
-                </span>
-
-                <strong id="overlayLastDate"></strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="description-section">
-
-            <h6>
-                Description
-            </h6>
-
-            <p id="overlayDescription"></p>
-
-        </div>
-
-
-        <div
-            id="overlayTags"
-            class="tags"
-        ></div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     ADD JOB MODAL
-========================================= -->
-
-<div id="addJobModal">
-
-    <div class="add-job-box">
-
-
-        <div class="modal-header">
-
-            <h2>
-                Post a New Job
-            </h2>
-
-
-            <button
-                class="modal-close"
-                onclick="closeAddJobModal()"
-            >
-                ✕
-            </button>
-
-        </div>
-
-
-        <div
-            id="successMessage"
-            class="success-message"
-        >
-            Job post created successfully!
-        </div>
-
-
-        <form onsubmit="postStaticJob(event)">
-
-
-            <div class="form-group">
-
-                <label>
-                    Job Title
-                </label>
-
-                <input
-                    type="text"
-                    id="newJobTitle"
-                    class="form-control"
-                    placeholder="e.g. Software Developer"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Company Name
-                </label>
-
-                <input
-                    type="text"
-                    id="newCompany"
-                    class="form-control"
-                    placeholder="e.g. ABC Technologies"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-row">
-
-
-                <div class="form-group">
-
-                    <label>
-                        Job Type
-                    </label>
-
-
-                    <select
-                        id="newJobType"
-                        class="form-control"
-                        required
-                    >
-
-                        <option value="">
-                            Select Job Type
-                        </option>
-
-                        <option>
-                            Full-time
-                        </option>
-
-                        <option>
-                            Part-time
-                        </option>
-
-                        <option>
-                            Internship
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Location
-                    </label>
-
-
-                    <input
-                        type="text"
-                        id="newLocation"
-                        class="form-control"
-                        placeholder="e.g. Dhaka, Bangladesh"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-row">
-
-
-                <div class="form-group">
-
-                    <label>
-                        Salary
-                    </label>
-
-
-                    <input
-                        type="text"
-                        id="newSalary"
-                        class="form-control"
-                        placeholder="e.g. BDT 40,000 - 60,000"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Application Deadline
-                    </label>
-
-
-                    <input
-                        type="date"
-                        id="newDeadline"
-                        class="form-control"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Job Description
-                </label>
-
-
-                <textarea
-                    id="newDescription"
-                    class="form-control"
-                    placeholder="Enter job description..."
-                    required
-                ></textarea>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Tags
-                </label>
-
-
-                <input
-                    type="text"
-                    id="newTags"
-                    class="form-control"
-                    placeholder="e.g. Software, Technology, Programming"
-                >
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    class="btn btn-cancel"
-                    onclick="closeAddJobModal()"
-                >
-                    Cancel
-                </button>
-
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Post Job
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
-
-<script>
-
-
-function showDetails(
-    title,
-    company,
-    type,
-    location,
-    salary,
-    date,
-    lastDate,
-    description,
-    tags
-) {
-
-    document.getElementById("overlayJobTitle").textContent = title;
-
-    document.getElementById("overlayCompany").textContent = company;
-
-    document.getElementById("overlayAddress").textContent = location;
-
-    document.getElementById("overlayType").textContent = type;
-
-    document.getElementById("overlaySalary").textContent = salary;
-
-    document.getElementById("overlayDate").textContent = date;
-
-    document.getElementById("overlayLastDate").textContent = lastDate;
-
-    document.getElementById("overlayDescription").textContent = description;
-
-
-    const tagContainer =
-        document.getElementById("overlayTags");
-
-    tagContainer.innerHTML = "";
-
-
-    if (tags && tags.length > 0) {
-
-        tags.forEach(function(tag) {
-
-            const span =
-                document.createElement("span");
-
-            span.className = "tag";
-
-            span.textContent = tag;
-
-            tagContainer.appendChild(span);
-
-        });
-
-    }
-
-
-    document.getElementById("details").style.display =
-        "block";
-
-}
-
-
-function closeDetails() {
-
-    document.getElementById("details").style.display =
-        "none";
-
-}
-
-
-function bookmark(button) {
-
-    button.textContent =
-        button.textContent === "🔖"
-        ? "⭐"
-        : "🔖";
-
-}
-
-
-function openAddJobModal() {
-
-    document.getElementById("addJobModal").style.display =
-        "block";
-
-}
-
-
-function closeAddJobModal() {
-
-    document.getElementById("addJobModal").style.display =
-        "none";
-
-}
-
-
-function postStaticJob(event) {
-
-    event.preventDefault();
-
-
-    document.getElementById("successMessage").style.display =
-        "block";
-
-
-    setTimeout(function() {
-
-        document.getElementById("successMessage").style.display =
-            "none";
-
-        closeAddJobModal();
-
-        event.target.reset();
-
-    }, 1200);
-
-}
-
-
-window.onclick = function(event) {
-
-    const details =
-        document.getElementById("details");
-
-    const addJobModal =
-        document.getElementById("addJobModal");
-
-
-    if (event.target === details) {
-
-        closeDetails();
-
-    }
-
-
-    if (event.target === addJobModal) {
-
-        closeAddJobModal();
-
-    }
-
-};
-
-</script>
-
-
+</section>
+{% endblock %}
+{% block footer_message %}
+    © 2026 Opportunity Portal. All rights reserved.
 {% endblock %}

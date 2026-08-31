@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Apply - {{ job.title }}</title>
+
+<style>
+
+body {
+    font-family: Arial;
+    background: #f5f7fb;
+}
+
+.container {
+
+    max-width: 750px;
+
+    margin: 50px auto;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 25px rgba(0,0,0,0.08);
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.company {
+
+    color: #2563eb;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+}
+
+.description {
+
+    color: #64748b;
+
+    line-height: 1.7;
+
+    margin-bottom: 30px;
+}
+
+label {
+
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 7px;
+}
+
+input,
+textarea {
+
+    width: 100%;
+
+    padding: 13px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    font-size: 15px;
+}
+
+button {
+
+    width: 100%;
+
+    padding: 14px;
+
+    background: #2563eb;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 7px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.back {
+
+    display: block;
+
+    margin-top: 20px;
+
+    text-align: center;
+
+    color: #2563eb;
+
+    text-decoration: none;
+}
+
+.errors {
+    color: red;
+    margin-bottom: 20px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Apply for {{ job.title }}
+    </h1>
+
+
+    <div class="company">
+        {{ job.organization }}
+    </div>
+
+
+    <div class="description">
+
+        {{ job.description }}
+
+        <br><br>
+
+        📍 {{ job.location }}
+
+        <br>
+
+        💼 {{ job.job_type }}
+
+        <br>
+
+        💰 {{ job.salary }}
+
+        <br>
+
+        📅 Deadline:
+        {{ job.deadline }}
+
+    </div>
+
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        {% csrf_token %}
+
+
+        {% if form.errors %}
+
+            <div class="errors">
+
+                Please correct the errors below.
+
+            </div>
+
+        {% endif %}
+
+
+        <label>
+            Full Name
+        </label>
+
+        {{ form.full_name }}
+
+        {{ form.full_name.errors }}
+
+
+        <label>
+            Email
+        </label>
+
+        {{ form.email }}
+
+        {{ form.email.errors }}
+
+
+        <label>
+            Phone Number
+        </label>
+
+        {{ form.phone }}
+
+        {{ form.phone.errors }}
+
+
+        <label>
+            Resume / CV
+        </label>
+
+        {{ form.resume }}
+
+        {{ form.resume.errors }}
+
+
+        <label>
+            Cover Letter
+        </label>
+
+        {{ form.cover_letter }}
+
+        {{ form.cover_letter.errors }}
+
+
+        <button type="submit">
+            Submit Application
+        </button>
+
+    </form>
+
+
+    <a
+        href="{% url 'job_list' %}"
+        class="back"
+    >
+        ← Back to Jobs
+    </a>
+
+
+</div>
+
+
+</body>
+
+</html>

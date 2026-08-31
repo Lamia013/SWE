@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from opportunity_portal.models import Job
 
 
 # =========================================================
@@ -85,101 +86,6 @@ class Organization(models.Model):
 
 
 # =========================================================
-# JOB
-# =========================================================
-
-class Job(models.Model):
-
-    job_id = models.AutoField(
-        primary_key=True
-    )
-
-    title = models.CharField(
-        max_length=255
-    )
-
-    vacancy = models.PositiveIntegerField(
-        blank=True,
-        null=True
-    )
-
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    qualification = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    experience = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
-
-    specialization = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
-
-    last_date_to_apply = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
-    salary = models.FloatField(
-        blank=True,
-        null=True
-    )
-
-    job_type = models.CharField(
-        max_length=100
-    )
-
-    organization = models.ForeignKey(
-        Organization,
-        on_delete=models.CASCADE,
-        related_name="jobs",
-        blank=True,
-        null=True
-    )
-
-    address = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
-
-    country = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    state = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    create_date = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    tags = models.CharField(
-        max_length=500,
-        blank=True,
-        null=True
-    )
-
-    def __str__(self):
-        return self.title
-
-
-# =========================================================
 # APPLY
 # =========================================================
 
@@ -208,6 +114,7 @@ class Apply(models.Model):
     )
 
     email = models.EmailField()
+    phone = models.CharField(max_length=20,default="18000000000")
 
     # Resume
     resume_file = models.FileField(
@@ -251,43 +158,7 @@ class Apply(models.Model):
         return f"{self.full_name} - {self.job.title}"
 
 
-# =========================================================
-# BOOKMARK
-# =========================================================
 
-class Bookmark(models.Model):
-
-    bookmark_id = models.AutoField(
-        primary_key=True
-    )
-
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="bookmarks",
-        limit_choices_to={"role": User.Role.STUDENT}
-    )
-
-    job = models.ForeignKey(
-        Job,
-        on_delete=models.CASCADE,
-        related_name="bookmarks"
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "job"],
-                name="unique_user_job_bookmark"
-            )
-        ]
-
-    def __str__(self):
-        return f"{self.user.username} - {self.job.title}"
 
 
 # =========================================================

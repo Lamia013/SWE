@@ -71,7 +71,7 @@
 
                 {% if user.role == "STUDENT" %}
 
-                    <a href="{% url 'student_dashboard' %}">
+                    <a href="{% url 'applicant_dashboard' %}">
                         Dashboard
                     </a>
 
@@ -212,7 +212,12 @@
 
         <div class="footer-right">
 
-            © 2026 Taj mim
+            {% block footer_message %}
+
+                © 2026 Taj mim
+
+            {% endblock %}
+
 
         </div>
 

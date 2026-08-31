@@ -187,7 +187,7 @@ def dashboard(request):
 
     if request.user.role == User.Role.STUDENT:
 
-        return redirect("student_dashboard")
+        return redirect("applicant_dashboard")
 
 
     # -----------------------------------------------------
@@ -222,30 +222,6 @@ def dashboard(request):
         )
 
         return redirect("login")
-
-
-# =========================================================
-# STUDENT DASHBOARD
-# =========================================================
-
-@login_required
-def student_dashboard(request):
-
-    # Only students can access this page
-    if request.user.role != User.Role.STUDENT:
-
-        messages.error(
-            request,
-            "You do not have permission to access the student dashboard."
-        )
-
-        return redirect("dashboard")
-
-    return render(
-        request,
-        "accounts/student_dashboard.html"
-    )
-
 
 # =========================================================
 # COMPANY DASHBOARD

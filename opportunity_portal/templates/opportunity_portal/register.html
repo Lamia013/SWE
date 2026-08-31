@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1f5f9;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+        .container {
+
+            width: 450px;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.1);
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            color: #1e293b;
+
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #334155;
+
+        }
+
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            font-size: 15px;
+
+        }
+
+
+        .role-title {
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .role-box {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .role-option {
+
+            flex: 1;
+
+            border: 2px solid #e2e8f0;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+        }
+
+
+        .role-option:hover {
+
+            border-color: #2563eb;
+
+        }
+
+
+        .role-option input {
+
+            margin-right: 6px;
+
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .login {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #64748b;
+
+        }
+
+
+        .login a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+
+        .errorlist {
+
+            color: #dc2626;
+
+            font-size: 13px;
+
+            margin: 5px 0 10px;
+
+            padding-left: 20px;
+
+        }
+
+
+        .helptext {
+
+            display: block;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            margin-top: -12px;
+
+            margin-bottom: 15px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Create Account
+    </h1>
+
+
+    <p class="subtitle">
+        Join Opportunity Portal
+    </p>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        {{ form.non_field_errors }}
+
+
+        <label>
+            Username
+        </label>
+
+        {{ form.username }}
+
+        {{ form.username.errors }}
+
+
+        <label>
+            Email
+        </label>
+
+        {{ form.email }}
+
+        {{ form.email.errors }}
+
+
+        <label>
+            Password
+        </label>
+
+        {{ form.password1 }}
+
+        {{ form.password1.errors }}
+
+
+        <label>
+            Confirm Password
+        </label>
+
+        {{ form.password2 }}
+
+        {{ form.password2.errors }}
+
+
+        <label class="role-title">
+            Select Account Type
+        </label>
+
+
+        <div class="role-box">
+
+            {% for radio in form.role %}
+
+                <label class="role-option">
+
+                    {{ radio.tag }}
+
+                    {{ radio.choice_label }}
+
+                </label>
+
+            {% endfor %}
+
+        </div>
+
+
+        {{ form.role.errors }}
+
+
+        <button type="submit">
+            Create Account
+        </button>
+
+
+    </form>
+
+
+    <div class="login">
+
+        Already have an account?
+
+        <a href="{% url 'login' %}">
+            Login
+        </a>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

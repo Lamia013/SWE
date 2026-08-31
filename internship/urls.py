@@ -29,6 +29,7 @@ urlpatterns = [
         "",
         include("accounts.urls")
     ),
+    path("", include("opportunity_portal.urls")),
 
     path(
         "add/",

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1f5f9;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+        .container {
+
+            width: 420px;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.1);
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            color: #1e293b;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        p {
+
+            text-align: center;
+
+            color: #64748b;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .register {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+        }
+
+
+        .register a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+
+        .errorlist {
+
+            color: red;
+
+            font-size: 13px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Welcome Back
+    </h1>
+
+
+    <p>
+        Login to your Opportunity Portal account
+    </p>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        {{ form.non_field_errors }}
+
+
+        <label>
+            Username
+        </label>
+
+        {{ form.username }}
+
+        {{ form.username.errors }}
+
+
+        <label>
+            Password
+        </label>
+
+        {{ form.password }}
+
+        {{ form.password.errors }}
+
+
+        <button type="submit">
+            Login
+        </button>
+
+
+    </form>
+
+
+    <div class="register">
+
+        Don't have an account?
+
+        <a href="{% url 'register' %}">
+            Create Account
+        </a>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
