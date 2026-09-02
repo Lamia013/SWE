@@ -46,11 +46,9 @@ class ApplicationForm(forms.ModelForm):
                 }
             ),
 
-            'cover_letter_file': forms.Textarea(
+            'cover_letter_file': forms.ClearableFileInput(
                 attrs={
-                    'class': 'form-control',
-                    'rows': 7,
-                    'placeholder': 'Write your cover letter'
+                    'class': 'form-control' 
                 }
             ),
         }

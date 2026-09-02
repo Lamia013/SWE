@@ -118,7 +118,7 @@ def apply_job(request, job_id):
 
     try:
 
-        role = request.user.userprofile.role
+        role = request.user.role
 
     except:
 
@@ -130,7 +130,7 @@ def apply_job(request, job_id):
         return redirect('job_list')
 
 
-    if role != 'applicant':
+    if request.user.role != User.Role.STUDENT:
 
         messages.error(
             request,
@@ -144,7 +144,7 @@ def apply_job(request, job_id):
 
     already_applied = Application.objects.filter(
         job=job,
-        applicant=request.user
+        user=request.user
     ).exists()
 
 
@@ -176,7 +176,7 @@ def apply_job(request, job_id):
 
             application.job = job
 
-            application.applicant = request.user
+            application.user = request.user
 
             application.save()
 
@@ -354,7 +354,7 @@ def dashboard_redirect(request):
 
         role = request.user.userprofile.role
 
-        if role == 'applicant':
+        if request.user.role != User.Role.STUDENT:
 
             return redirect(
                 'applicant_dashboard'
