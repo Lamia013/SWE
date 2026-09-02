@@ -1,4 +1,4 @@
-{% extends 'opportunity_portal/base.html' %}
+{% extends 'accounts/base.html' %}
 
 {% block title %}
 Organization Dashboard
@@ -206,8 +206,10 @@ Organization Dashboard
 
             <div class="empty">
 
-                You haven't posted any jobs yet.
-
+                You haven't posted any internships yet.
+                <button class="add-job-btn" onclick="openAddJobModal()" style="float: right;">
+                    Add New Intership Post
+                </button>
             </div>
 
 
@@ -313,5 +315,5 @@ Organization Dashboard
 
 
 </div>
-
+{% include "internship/CRUD_post.html" %}
 {% endblock %}

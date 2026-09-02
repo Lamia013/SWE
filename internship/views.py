@@ -1,24 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from accounts.models import User
+from accounts.models import User, Organization
+
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, "index.html")
+
 
 def CRUD_application(request):
-    return render(request, 'CRUD_application.html')
+    return render(request, "CRUD_application.html")
+
 
 def CRUD_applicant(request):
-    return render(request, 'CRUD_applicant.html')
+    return render(request, "CRUD_applicant.html")
 
-def CRUD_org(request):
-    return render(request, 'CRUD_org.html')
 
 def CRUD_post(request):
-    return render(request, 'CRUD_post.html')
+    return render(request, "CRUD_post.html")
+
 
 def add_page(request):
     return render(request, "add.html")
+
 
 # =========================================================
 # STUDENT CRUD
@@ -127,3 +130,131 @@ def student_delete(request, pk):
         student.delete()
 
     return redirect("student_list")
+
+
+# =========================================================
+# ORGANIZATION CRUD
+# =========================================================
+
+@login_required
+def CRUD_org(request):
+
+    if request.user.role != User.Role.ADMIN:
+        return redirect("dashboard")
+
+    organizations = User.objects.filter(
+        role=User.Role.COMPANY
+    ).select_related(
+        "organization"
+    ).order_by("id")
+
+    
+    return render(
+        request,
+        "CRUD_org.html",
+        {
+            "organizations": organizations
+        }
+    )
+
+
+@login_required
+def organization_add(request):
+
+    if request.user.role != User.Role.ADMIN:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        organization_name = request.POST.get("organization_name")
+        website = request.POST.get("website")
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            role=User.Role.COMPANY
+        )
+
+        Organization.objects.create(
+            organization_name=organization_name,
+            website=website,
+            user=user
+        )
+
+        return redirect("CRUD_org")
+
+    return render(
+        request,
+        "organization_add.html"
+    )
+
+
+@login_required
+def organization_edit(request, pk):
+
+    if request.user.role != User.Role.ADMIN:
+        return redirect("dashboard")
+
+    organization = get_object_or_404(
+        Organization.objects.select_related("user"),
+        pk=pk
+    )
+
+    user = organization.user
+
+    if request.method == "POST":
+
+        organization.organization_name = request.POST.get(
+            "organization_name"
+        )
+
+        organization.website = request.POST.get(
+            "website"
+        )
+
+        user.username = request.POST.get(
+            "username"
+        )
+
+        user.email = request.POST.get(
+            "email"
+        )
+
+        password = request.POST.get("password")
+
+        if password:
+            user.set_password(password)
+
+        user.save()
+        organization.save()
+
+        return redirect("CRUD_org")
+
+    return render(
+        request,
+        "organization_edit.html",
+        {
+            "organization": organization
+        }
+    )
+
+
+@login_required
+def organization_delete(request, pk):
+
+    if request.user.role != User.Role.ADMIN:
+        return redirect("dashboard")
+
+    organization = get_object_or_404(
+        Organization,
+        pk=pk
+    )
+
+    if request.method == "POST":
+        organization.delete()
+
+    return redirect("CRUD_org")

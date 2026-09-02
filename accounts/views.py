@@ -242,7 +242,7 @@ def company_dashboard(request):
 
     return render(
         request,
-        "accounts/company_dashboard.html"
+        'opportunity_portal/organization_dashboard.html',
     )
 
 

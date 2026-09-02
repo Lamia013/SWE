@@ -2,96 +2,41 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
-
 urlpatterns = [
 
-    # =====================================================
-    # DJANGO ADMIN
-    # =====================================================
-
-    path(
-        "admin/",
-        admin.site.urls
-    ),
+path("admin/", admin.site.urls),
+path("index/", views.index, name="index"),
+path("", include("accounts.urls")),
+path("", include("opportunity_portal.urls")),
+path("add/", views.add_page, name="add_page"),
 
 
-    # =====================================================
-    # MAIN / PUBLIC PAGES
-    # =====================================================
-
-    path(
-        "index/",
-        views.index,
-        name="index"
-    ),
-
-    path(
-        "",
-        include("accounts.urls")
-    ),
-    path("", include("opportunity_portal.urls")),
-
-    path(
-        "add/",
-        views.add_page,
-        name="add_page"
-    ),
+# =====================================================
+# ADMIN CRUD PAGES
+# =====================================================
+path("CRUD_post/", views.CRUD_post, name="CRUD_post"),
+path("CRUD_applicant/", views.CRUD_applicant, name="CRUD_applicant"),
+path("CRUD_org/", views.CRUD_org, name="CRUD_org"),
+path("CRUD_application/", views.CRUD_application, name="CRUD_application"),
 
 
-    # =====================================================
-    # ADMIN CRUD PAGES
-    # =====================================================
+# =====================================================
+# STUDENT CRUD
+# =====================================================
 
-    path(
-        "CRUD_post/",
-        views.CRUD_post,
-        name="CRUD_post"
-    ),
-
-    path(
-        "CRUD_applicant/",
-        views.CRUD_applicant,
-        name="CRUD_applicant"
-    ),
-
-    path(
-        "CRUD_org/",
-        views.CRUD_org,
-        name="CRUD_org"
-    ),
-
-    path(
-        "CRUD_application/",
-        views.CRUD_application,
-        name="CRUD_application"
-    ),
+path("admin-students/", views.student_list, name="student_list"),
+path("admin-students/add/", views.student_add, name="student_add"),
+path("admin-students/edit/<int:pk>/", views.student_edit, name="student_edit"),
+path("admin-students/delete/<int:pk>/", views.student_delete, name="student_delete"),
 
 
-    # =====================================================
-    # STUDENT CRUD
-    # =====================================================
+# =====================================================
+# ORGANIZATION CRUD
+# =====================================================
 
-    path(
-        "admin-students/",
-        views.student_list,
-        name="student_list"
-    ),
+path("admin-organizations/", views.CRUD_org, name="CRUD_org"),
+path("admin-organizations/add/", views.organization_add, name="organization_add"),
+path("admin-organizations/edit/<int:pk>/", views.organization_edit, name="organization_edit"),
+path("admin-organizations/delete/<int:pk>/", views.organization_delete, name="organization_delete") 
 
-    path(
-        "admin-students/add/",
-        views.student_add,
-        name="student_add"
-    ),
-
-    path(
-        "admin-students/edit/<int:pk>/",
-        views.student_edit,
-        name="student_edit"
-    ),
-
-    path(
-        "admin-students/delete/<int:pk>/",
-        views.student_delete,
-        name="student_delete"
-    ),
 ]

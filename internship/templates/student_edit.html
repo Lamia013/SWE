@@ -6,87 +6,141 @@ Edit Student | InternHub
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <h2 class="mb-4">Edit Student</h2>
+    <div class="row justify-content-center">
 
-    <div class="card">
+        <div class="col-lg-7 col-md-9">
 
-        <div class="card-body">
+            <!-- Page Header -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-dark mb-1">
+                    Edit Student
+                </h2>
+                <p class="text-muted mb-0">
+                    Update the student's account information
+                </p>
+            </div>
 
-            <form method="POST">
+            <!-- Edit Card -->
+            <div class="card border-0 shadow-sm rounded-4">
 
-                {% csrf_token %}
+                <div class="card-body p-4 p-md-5">
 
-                <div class="mb-3">
-                    <label>Username</label>
+                    <form method="POST">
 
-                    <input
-                        type="text"
-                        name="username"
-                        class="form-control"
-                        value="{{ student.username }}"
-                        required
-                    >
+                        {% csrf_token %}
+
+                        <!-- Username -->
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-semibold">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="form-control form-control-lg"
+                                value="{{ student.username }}"
+                                required
+                            >
+                        </div>
+
+                        <!-- Name -->
+                        <div class="row">
+
+                            <div class="col-md-6 mb-4">
+                                <label for="first_name" class="form-label fw-semibold">
+                                    First Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="first_name"
+                                    name="first_name"
+                                    class="form-control form-control-lg"
+                                    value="{{ student.first_name }}"
+                                >
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="last_name" class="form-label fw-semibold">
+                                    Last Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="last_name"
+                                    name="last_name"
+                                    class="form-control form-control-lg"
+                                    value="{{ student.last_name }}"
+                                >
+                            </div>
+
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-semibold">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control form-control-lg"
+                                value="{{ student.email }}"
+                                required
+                            >
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control form-control-lg"
+                                placeholder="Leave empty to keep current password"
+                            >
+
+                            <div class="form-text">
+                                Only enter a password if you want to change it.
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a
+                                href="{% url 'student_list' %}"
+                                class="btn btn-light border px-4 py-2"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4 py-2"
+                            >
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
                 </div>
 
-                <div class="mb-3">
-                    <label>First Name</label>
-
-                    <input
-                        type="text"
-                        name="first_name"
-                        class="form-control"
-                        value="{{ student.first_name }}"
-                    >
-                </div>
-
-                <div class="mb-3">
-                    <label>Last Name</label>
-
-                    <input
-                        type="text"
-                        name="last_name"
-                        class="form-control"
-                        value="{{ student.last_name }}"
-                    >
-                </div>
-
-                <div class="mb-3">
-                    <label>Email</label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        value="{{ student.email }}"
-                        required
-                    >
-                </div>
-
-                <div class="mb-3">
-                    <label>New Password</label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        class="form-control"
-                        placeholder="Leave empty to keep current password"
-                    >
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    Save Changes
-                </button>
-
-                <a
-                    href="{% url 'student_list' %}"
-                    class="btn btn-secondary"
-                >
-                    Cancel
-                </a>
-
-            </form>
+            </div>
 
         </div>
 
@@ -94,4 +148,4 @@ Edit Student | InternHub
 
 </div>
 
-{% endblock %}
+{% endblock %} 
