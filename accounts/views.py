@@ -2,13 +2,13 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-
+from opportunity_portal.models import Job
 from .models import User, Organization
 from .forms import (
     StudentRegistrationForm,
     CompanyRegistrationForm,
 )
-
+from accounts.models import Apply as Application
 
 # =========================================================
 # REGISTER CHOICE
@@ -230,7 +230,6 @@ def dashboard(request):
 @login_required
 def company_dashboard(request):
 
-    # Only companies can access this page
     if request.user.role != User.Role.COMPANY:
 
         messages.error(
@@ -240,11 +239,44 @@ def company_dashboard(request):
 
         return redirect("dashboard")
 
-    return render(
-        request,
-        'opportunity_portal/organization_dashboard.html',
+    # Get the organization belonging to this company account
+    try:
+        organization = request.user.organization
+    except Organization.DoesNotExist:
+
+        messages.error(
+            request,
+            "No organization profile is associated with this account."
+        )
+
+        return redirect("dashboard")
+
+    # Get only jobs posted by this organization
+    jobs = Job.objects.filter(
+        organization=organization.organization_name
+    ).order_by(
+        "-created_at"
     )
 
+    # Get applications for this organization's jobs
+    applications = Application.objects.filter(
+        job__in=jobs
+    ).select_related(
+        "job",
+        "user"
+    ).order_by(
+        "-applied_date"
+    )
+
+    return render(
+        request,
+        "opportunity_portal/organization_dashboard.html",
+        {
+            "organization": organization,
+            "jobs": jobs,
+            "applications": applications,
+        }
+    )
 
 # =========================================================
 # ADMIN DASHBOARD

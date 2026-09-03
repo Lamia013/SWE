@@ -37,6 +37,24 @@ path("admin-students/delete/<int:pk>/", views.student_delete, name="student_dele
 path("admin-organizations/", views.CRUD_org, name="CRUD_org"),
 path("admin-organizations/add/", views.organization_add, name="organization_add"),
 path("admin-organizations/edit/<int:pk>/", views.organization_edit, name="organization_edit"),
-path("admin-organizations/delete/<int:pk>/", views.organization_delete, name="organization_delete") 
+path("admin-organizations/delete/<int:pk>/", views.organization_delete, name="organization_delete"), 
+
+
+
+# =====================================================
+# POST CRUD
+# =====================================================
+
+path("admin-posts/", views.CRUD_post, name="post_post"),
+path("admin-posts/add/", views.post_add, name="post_add"),
+path("admin-posts/edit/<int:pk>/", views.post_edit, name="post_edit"),
+path("admin-posts/delete/<int:pk>/", views.post_delete, name="post_delete"), 
+
+
+path(
+    'organization/application/<int:application_id>/<str:status>/',
+    views.update_application_status,
+    name='update_application_status'
+),
 
 ]
