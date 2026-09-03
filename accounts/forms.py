@@ -37,6 +37,14 @@ class CompanyRegistrationForm(UserCreationForm):
 
     email = forms.EmailField()
 
+    organization_name = forms.CharField(
+        max_length=255
+    )
+
+    website = forms.URLField(
+        required=False
+    )
+
     class Meta:
 
         model = User
@@ -44,6 +52,8 @@ class CompanyRegistrationForm(UserCreationForm):
         fields = [
             "username",
             "email",
+            "organization_name",
+            "website",
             "password1",
             "password2",
         ]

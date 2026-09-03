@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from .models import User
+from .models import User, Organization
 from .forms import (
     StudentRegistrationForm,
     CompanyRegistrationForm,
@@ -75,7 +75,6 @@ def student_register(request):
 
 def company_register(request):
 
-    # Already logged in
     if request.user.is_authenticated:
         return redirect("dashboard")
 
@@ -85,10 +84,14 @@ def company_register(request):
 
         if form.is_valid():
 
-            # Save company
             user = form.save()
 
-            # Automatically login after registration
+            Organization.objects.create(
+                organization_name=form.cleaned_data["organization_name"],
+                website=form.cleaned_data["website"],
+                user=user
+            )
+
             login(request, user)
 
             messages.success(
@@ -96,7 +99,6 @@ def company_register(request):
                 f"Welcome {user.username}!"
             )
 
-            # Go directly to company dashboard
             return redirect("company_dashboard")
 
     else:
@@ -110,8 +112,6 @@ def company_register(request):
             "form": form
         }
     )
-
-
 # =========================================================
 # LOGIN
 # =========================================================

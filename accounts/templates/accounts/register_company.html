@@ -69,6 +69,26 @@ Company Registration | InternHub
             </div>
 
 
+            <!-- Full NAME -->
+            
+            <div class="form-group">
+            
+                <label for="{{ form.organization_name.id_for_label }}">
+                    Company Full Name
+                </label>
+            
+                {{ form.organization_name }}
+            
+                {% if form.organization_name.errors %}
+            
+                    <div class="field-error">
+                        {{ form.organization_name.errors }}
+                    </div>
+            
+                {% endif %}
+            
+            </div>
+
 
             <!-- EMAIL -->
 
@@ -90,7 +110,25 @@ Company Registration | InternHub
 
             </div>
 
+            <!-- WEBSITE -->
 
+            <div class="form-group">
+
+                <label for="{{ form.website.id_for_label }}">
+                    Website
+                </label>
+
+                {{ form.website }}
+
+                {% if form.website.errors %}
+
+                    <div class="field-error">
+                        {{ form.website.errors }}
+                    </div>
+
+                {% endif %}
+
+            </div>
 
             <!-- PASSWORD -->
 

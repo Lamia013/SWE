@@ -135,20 +135,28 @@ def student_delete(request, pk):
 # =========================================================
 # ORGANIZATION CRUD
 # =========================================================
-
 @login_required
 def CRUD_org(request):
 
     if request.user.role != User.Role.ADMIN:
         return redirect("dashboard")
 
-    organizations = User.objects.filter(
-        role=User.Role.COMPANY
-    ).select_related(
-        "organization"
-    ).order_by("id")
+    organizations = Organization.objects.select_related(
+        "user"
+    ).order_by(
+        "organization_id"
+    )
 
-    
+    print("ORGANIZATIONS:", organizations)
+    print("COUNT:", organizations.count())
+
+    for org in organizations:
+        print(
+            "ID:", org.organization_id,
+            "NAME:", org.organization_name,
+            "EMAIL:", org.user.email
+        )
+
     return render(
         request,
         "CRUD_org.html",
