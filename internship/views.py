@@ -3,23 +3,25 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import User, Organization
 from opportunity_portal.models import Job
 from accounts.models import Apply as Application
+from accounts.notifications import notify_user
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def index(request):
-    return render(request, "index.html")
 
+    latest_jobs = Job.objects.order_by(
+        "-created_at"
+    )[:6]
 
-def CRUD_application(request):
-    return render(request, "CRUD_application.html")
-
-
-def CRUD_applicant(request):
-    return render(request, "CRUD_applicant.html")
-
-
-def add_page(request):
-    return render(request, "add.html")
+    return render(
+        request,
+        "index.html",
+        {
+            "jobs": latest_jobs
+        }
+    )
 
 
 # =========================================================
@@ -320,9 +322,14 @@ def post_add(request):
             deadline=deadline
         )
 
+        messages.success(
+            request,
+            "Post created successfully."
+        )
+
         # Return to the appropriate dashboard
         if request.user.role == User.Role.ADMIN:
-            return redirect("post_list")
+            return redirect("CRUD_post")
 
         return redirect("dashboard")
 
@@ -390,6 +397,30 @@ def post_delete(request, pk):
     return redirect("CRUD_post")
 
 
+# =========================================================
+# APPLICATIONS (ADMIN)
+# =========================================================
+
+@login_required
+def CRUD_application(request):
+
+    if request.user.role != User.Role.ADMIN:
+        return redirect("dashboard")
+
+    applications = Application.objects.select_related(
+        "job",
+        "user"
+    ).order_by("-applied_date")
+
+    return render(
+        request,
+        "CRUD_application.html",
+        {
+            "applications": applications
+        }
+    )
+
+
 @login_required
 def update_application_status(request, application_id, status):
 
@@ -399,23 +430,49 @@ def update_application_status(request, application_id, status):
     )
 
     # Make sure this application belongs to a job
-    # posted by the logged-in organization
-    if application.job.organization != request.user.username:
+    # posted by the logged-in organization (or an admin)
+
+    is_owner = False
+
+    if request.user.role == User.Role.ADMIN:
+
+        is_owner = True
+
+    else:
+
+        organization = Organization.objects.filter(
+            user=request.user
+        ).first()
+
+        if organization and application.job.organization == organization.organization_name:
+            is_owner = True
+
+    if not is_owner:
 
         messages.error(
             request,
             'You do not have permission to update this application.'
         )
 
-        return redirect('organization_dashboard')
+        return redirect('dashboard')
 
     if request.method == 'POST':
 
         if status == 'accepted':
 
-            application.status = 'accepted'
+            application.status = 'Accepted'
 
             application.save()
+
+            notify_user(
+                application.user,
+                f'Your application for "{application.job.title}" at '
+                f'{application.job.organization} has been accepted. 🎉'
+            )
+            send_application_status_email(
+            application,
+            "Accepted"
+             )
 
             messages.success(
                 request,
@@ -424,9 +481,20 @@ def update_application_status(request, application_id, status):
 
         elif status == 'rejected':
 
-            application.status = 'rejected'
+            application.status = 'Rejected'
 
             application.save()
+
+            notify_user(
+                application.user,
+                f'Your application for "{application.job.title}" at '
+                f'{application.job.organization} has been rejected.'
+            )
+
+            send_application_status_email(
+                application,
+                "Rejected"
+            )
 
             messages.success(
                 request,
@@ -440,6 +508,54 @@ def update_application_status(request, application_id, status):
                 'Invalid application status.'
             )
 
+    if request.user.role == User.Role.ADMIN:
+        return redirect('CRUD_application')
+
     return redirect(
-        'organization_dashboard'
+        'company_dashboard'
     )
+
+def send_application_status_email(application, status):
+
+    print("EMAIL FUNCTION CALLED")
+    print("Recipient:", application.email)
+    print("Status:", status)
+
+    if status == "Accepted":
+        subject = f'Application Accepted - {application.job.title}'
+        message = f"""
+Dear {application.full_name},
+
+Congratulations!
+
+Your application for the position of "{application.job.title}" at {application.job.organization} has been accepted.
+
+Best regards,
+InternHub Team
+"""
+
+    elif status == "Rejected":
+        subject = f'Application Update - {application.job.title}'
+        message = f"""
+Dear {application.full_name},
+
+Thank you for applying for the position of "{application.job.title}" at {application.job.organization}.
+
+Unfortunately, your application has not been selected at this time.
+
+Best regards,
+InternHub Team
+"""
+
+    else:
+        return
+
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[application.email],
+        fail_silently=False
+    )
+
+    print("EMAIL SENT")

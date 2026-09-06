@@ -1,25 +1,12 @@
-from .forms import (
-    ApplicationForm
-)
-from django.shortcuts import (
-    render,
-    get_object_or_404,
-    redirect
-)
+from .forms import ApplicationForm
+from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import Apply as Application
 from django.contrib.auth.decorators import login_required
-from accounts.models import User, Apply
+from accounts.models import User, Apply, Organization
+from accounts.notifications import notify_user
 from django.contrib import messages
-
 from django.db.models import Q
-
-from .models import (
-    Job,
-    Bookmark,
-    UserProfile
-)
-
-from .forms import ApplicationForm
+from .models import Job, Bookmark
 
 def job_list(request):
 
@@ -78,19 +65,20 @@ def job_list(request):
 
     # BOOKMARKED JOB IDS
 
-    bookmarked_jobs = []
+    bookmarks = Bookmark.objects.filter(
+        user=request.user
+    ).select_related(
+        'job'
+    ).order_by(
+        '-created_at'
+    )
 
-    if request.user.is_authenticated:
-
-        bookmarked_jobs = list(
-            Bookmark.objects.filter(
-                user=request.user
-            ).values_list(
-                'job_id',
-                flat=True
-            )
+    bookmarked_jobs = list(
+        bookmarks.values_list(
+            'job_id',
+            flat=True
         )
-
+    ) if request.user.is_authenticated else []
 
     return render(
         request,
@@ -101,6 +89,7 @@ def job_list(request):
             'location': location,
             'job_type': job_type,
             'bookmarked_jobs': bookmarked_jobs,
+            'bookmarks': bookmarks,
         }
     )
 
@@ -180,6 +169,19 @@ def apply_job(request, job_id):
 
             application.save()
 
+            # Notify the organization that owns this job posting
+
+            organization = Organization.objects.filter(
+                organization_name=job.organization
+            ).select_related('user').first()
+
+            if organization:
+
+                notify_user(
+                    organization.user,
+                    f'{request.user.get_full_name() or request.user.username} '
+                    f'applied for "{job.title}".'
+                )
 
             messages.success(
                 request,
@@ -194,7 +196,12 @@ def apply_job(request, job_id):
 
     else:
 
-        form = ApplicationForm()
+        form = ApplicationForm(
+        initial={
+            'full_name': request.user.get_full_name(),
+            'email': request.user.email,
+        }
+    )
 
 
     return render(
@@ -293,81 +300,3 @@ def applicant_dashboard(request):
             "bookmarks": bookmarks
         }
     )
-
-
-@login_required
-def organization_dashboard(request):
-
-    try:
-
-        role = request.user.userprofile.role
-
-    except:
-
-        messages.error(
-            request,
-            'Please create an organization profile.'
-        )
-
-        return redirect('index')
-
-
-    if role != 'organization':
-
-        messages.error(
-            request,
-            'Organization dashboard only.'
-        )
-
-        return redirect('index')
-
-
-    jobs = Job.objects.filter(
-        organization=request.user.username
-    ).order_by(
-        '-created_at'
-    )
-
-
-    applications = Application.objects.filter(
-        job__in=jobs
-    ).select_related(
-        'job',
-        'applicant'
-    ).order_by(
-        '-applied_at'
-    )
-
-
-    return render(
-        request,
-        'opportunity_portal/organization_dashboard.html',
-        {
-            'jobs': jobs,
-            'applications': applications
-        }
-    )
-@login_required
-def dashboard_redirect(request):
-
-    try:
-
-        role = request.user.userprofile.role
-
-        if request.user.role != User.Role.STUDENT:
-
-            return redirect(
-                'applicant_dashboard'
-            )
-
-        elif role == 'organization':
-
-            return redirect(
-                'organization_dashboard'
-            )
-
-    except UserProfile.DoesNotExist:
-
-        return redirect('index')
-
-    return redirect('index')

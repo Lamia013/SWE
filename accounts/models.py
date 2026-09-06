@@ -171,13 +171,31 @@ class Notification(models.Model):
         primary_key=True
     )
 
-    email = models.EmailField()
+    # Recipient account (preferred way to target a notification)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="notifications",
+        null=True,
+        blank=True
+    )
+
+    email = models.EmailField(
+        blank=True
+    )
 
     message = models.TextField()
+
+    is_read = models.BooleanField(
+        default=False
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+    class Meta:
+        ordering = ["-created_at"]
+
     def __str__(self):
-        return self.email
+        return f"{self.user or self.email}: {self.message[:40]}"

@@ -403,7 +403,7 @@ Add Job Post | InternHub
 
 
             <a
-                href="{% url 'CRUD_post' %}"
+                href="{% if is_admin %}{% url 'CRUD_post' %}{% else %}{% url 'dashboard' %}{% endif %}"
                 class="btn btn-cancel"
             >
                 Cancel

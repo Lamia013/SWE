@@ -1,13 +1,18 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from opportunity_portal.models import Job
-from .models import User, Organization
+from .models import User, Organization, Notification
 from .forms import (
     StudentRegistrationForm,
     CompanyRegistrationForm,
 )
+from .notifications import notify_users
 from accounts.models import Apply as Application
 
 # =========================================================
@@ -54,7 +59,7 @@ def student_register(request):
             )
 
             # Go directly to student dashboard
-            return redirect("student_dashboard")
+            return redirect("applicant_dashboard")
 
     else:
 
@@ -155,6 +160,17 @@ def login_view(request):
                 request,
                 f"Welcome back, {user.username}!"
             )
+
+            # Return the user to the page they were trying to
+            # reach before logging in (e.g. "Apply Now"), if any
+            next_url = request.POST.get("next") or request.GET.get("next")
+
+            if next_url and url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                return redirect(next_url)
 
             # Send user according to role
             return redirect("dashboard")
@@ -295,10 +311,146 @@ def admin_dashboard(request):
 
         return redirect("dashboard")
 
+    # -----------------------------------------------------
+    # SEND NOTIFICATION (admin broadcast form)
+    # -----------------------------------------------------
+
+    if request.method == "POST" and request.POST.get("form_type") == "send_notification":
+
+        audience = request.POST.get("audience")
+        message_text = request.POST.get("message", "").strip()
+
+        if not message_text:
+
+            messages.error(
+                request,
+                "Notification message cannot be empty."
+            )
+
+        else:
+
+            if audience == "students":
+                targets = User.objects.filter(role=User.Role.STUDENT)
+
+            elif audience == "companies":
+                targets = User.objects.filter(role=User.Role.COMPANY)
+
+            else:
+                targets = User.objects.exclude(role=User.Role.ADMIN)
+
+            notify_users(targets, message_text)
+
+            messages.success(
+                request,
+                f"Notification sent to {targets.count()} user(s)."
+            )
+
+        return redirect("admin_dashboard")
+
+    # -----------------------------------------------------
+    # STAT CARDS
+    # -----------------------------------------------------
+
+    total_jobs = Job.objects.count()
+    total_applications = Application.objects.count()
+    total_applicants = User.objects.filter(role=User.Role.STUDENT).count()
+    total_organizations = Organization.objects.count()
+
+    # -----------------------------------------------------
+    # RECENT ACTIVITY
+    # -----------------------------------------------------
+
+    recent_jobs = Job.objects.order_by("-created_at")[:5]
+
+    # -----------------------------------------------------
+    # JOB POSTING TREND (last 7 days)
+    # -----------------------------------------------------
+
+    today = timezone.localdate()
+    days = [today - timedelta(days=offset) for offset in range(6, -1, -1)]
+
+    chart_labels = [day.strftime("%a") for day in days]
+
+    chart_data = [
+        Job.objects.filter(created_at__date=day).count()
+        for day in days
+    ]
+
+    # -----------------------------------------------------
+    # NOTIFICATIONS SENT (recent)
+    # -----------------------------------------------------
+
+    recent_notifications = Notification.objects.order_by("-created_at")[:8]
+
     return render(
         request,
-        "accounts/admin_dashboard.html"
+        "accounts/admin_dashboard.html",
+        {
+            "total_jobs": total_jobs,
+            "total_applications": total_applications,
+            "total_applicants": total_applicants,
+            "total_organizations": total_organizations,
+            "recent_jobs": recent_jobs,
+            "chart_labels": chart_labels,
+            "chart_data": chart_data,
+            "recent_notifications": recent_notifications,
+        }
     )
+
+
+# =========================================================
+# NOTIFICATIONS
+# =========================================================
+
+@login_required
+def notifications_view(request):
+
+    user_notifications = Notification.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "accounts/notifications.html",
+        {
+            "notifications": user_notifications
+        }
+    )
+
+
+@login_required
+def mark_notification_read(request, pk):
+
+    notification = get_object_or_404(
+        Notification,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == "POST":
+
+        notification.is_read = True
+        notification.save()
+
+    return redirect("notifications")
+
+
+@login_required
+def mark_all_notifications_read(request):
+
+    if request.method == "POST":
+
+        Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).update(is_read=True)
+
+        messages.success(
+            request,
+            "All notifications marked as read."
+        )
+
+    return redirect("notifications")
 
 
 # =========================================================
@@ -320,4 +472,7 @@ def logout_view(request):
     return redirect("login")
 
 def home(request):
-    return render(request, "accounts/home.html")
+    latest_jobs = Job.objects.order_by("-created_at")
+    return render(request, "accounts/home.html", {
+            "jobs": latest_jobs
+        })

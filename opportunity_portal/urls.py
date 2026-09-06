@@ -6,13 +6,6 @@ from . import views
 urlpatterns = [
 
     path(
-        '',
-        views.job_list,
-        name='job_list'
-    ),
-
-
-    path(
         'jobs/',
         views.job_list,
         name='job_list'
@@ -35,17 +28,5 @@ urlpatterns = [
         views.applicant_dashboard,
         name='applicant_dashboard'
     ),
-
-    path(
-        'organization-dashboard/',
-        views.organization_dashboard,
-        name='organization_dashboard'
-    ),
-
-    path(
-    'dashboard/',
-    views.dashboard_redirect,
-    name='dashboard'
-),
 
 ]

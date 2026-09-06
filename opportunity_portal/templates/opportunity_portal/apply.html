@@ -1,27 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'accounts/base.html' %}
 
-<head>
+{% block title %}
+Apply - {{ job.title }} | InternHub
+{% endblock %}
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Apply - {{ job.title }}</title>
+{% block content %}
 
 <style>
 
-body {
-    font-family: Arial;
-    background: #f5f7fb;
-}
-
-.container {
+.apply-container {
 
     max-width: 750px;
 
-    margin: 50px auto;
+    margin: 10px auto 40px;
 
     background: white;
 
@@ -33,7 +24,7 @@ body {
         0 5px 25px rgba(0,0,0,0.08);
 }
 
-h1 {
+.apply-container h1 {
     margin-bottom: 10px;
 }
 
@@ -55,7 +46,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-label {
+.apply-container label {
 
     display: block;
 
@@ -64,8 +55,8 @@ label {
     margin-bottom: 7px;
 }
 
-input,
-textarea {
+.apply-container input,
+.apply-container textarea {
 
     width: 100%;
 
@@ -80,7 +71,7 @@ textarea {
     font-size: 15px;
 }
 
-button {
+.apply-container button {
 
     width: 100%;
 
@@ -101,6 +92,10 @@ button {
     cursor: pointer;
 }
 
+.apply-container button:hover {
+    background: #1d4ed8;
+}
+
 .back {
 
     display: block;
@@ -115,19 +110,13 @@ button {
 }
 
 .errors {
-    color: red;
+    color: #dc2626;
     margin-bottom: 20px;
 }
 
 </style>
 
-</head>
-
-
-<body>
-
-
-<div class="container">
+<div class="apply-container">
 
 
     <h1>
@@ -188,16 +177,29 @@ button {
             Full Name
         </label>
 
-        {{ form.full_name }}
-
+        <input
+            type="text"
+            name="full_name"
+            value="{{ request.user.get_full_name }}"
+            class="form-control"
+            readonly
+        >
         {{ form.full_name.errors }}
+
 
 
         <label>
             Email
         </label>
 
-        {{ form.email }}
+        <input
+            type="email"
+            name="email"
+            value="{{ request.user.email }}"
+            class="form-control"
+            readonly
+        >
+
 
         {{ form.email.errors }}
 
@@ -246,7 +248,4 @@ button {
 
 </div>
 
-
-</body>
-
-</html>
+{% endblock %}

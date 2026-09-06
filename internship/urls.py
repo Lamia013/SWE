@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -8,14 +10,12 @@ path("admin/", admin.site.urls),
 path("index/", views.index, name="index"),
 path("", include("accounts.urls")),
 path("", include("opportunity_portal.urls")),
-path("add/", views.add_page, name="add_page"),
 
 
 # =====================================================
 # ADMIN CRUD PAGES
 # =====================================================
 path("CRUD_post/", views.CRUD_post, name="CRUD_post"),
-path("CRUD_applicant/", views.CRUD_applicant, name="CRUD_applicant"),
 path("CRUD_org/", views.CRUD_org, name="CRUD_org"),
 path("CRUD_application/", views.CRUD_application, name="CRUD_application"),
 
@@ -45,7 +45,6 @@ path("admin-organizations/delete/<int:pk>/", views.organization_delete, name="or
 # POST CRUD
 # =====================================================
 
-path("admin-posts/", views.CRUD_post, name="post_post"),
 path("admin-posts/add/", views.post_add, name="post_add"),
 path("admin-posts/edit/<int:pk>/", views.post_edit, name="post_edit"),
 path("admin-posts/delete/<int:pk>/", views.post_delete, name="post_delete"), 
@@ -58,3 +57,7 @@ path(
 ),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

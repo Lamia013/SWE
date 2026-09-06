@@ -35,9 +35,15 @@ InternHub | Internship Management System
 
         <nav class="nav-links">
 
-            <a href="{% url 'index' %}">
-                Home
-            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'job_list' %}">
+                    Home
+                </a>
+            {% else %}
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+            {% endif %}
 
             <a href="#about">
                 About
@@ -54,25 +60,107 @@ InternHub | Internship Management System
         </nav>
 
 
-        <div class="nav-actions">
-            <a href="{% url 'login' %}?role=admin" class="admin-button">
-                Admin Login
-            </a>
-            <a
-                href="{% url 'login' %}"
-                class="login-link"
-            >
-                Login
-            </a>
+        {% if user.is_authenticated %}
 
-            <a
-                href="{% url 'student_register' %}"
-                class="nav-register"
-            >
-                Get Started
-            </a>
+            <nav class="nav-links">
 
-        </div>
+                {% if user.role == "STUDENT" %}
+
+                    <a href="{% url 'applicant_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% elif user.role == "COMPANY" %}
+
+                    <a href="{% url 'company_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% elif user.role == "ADMIN" %}
+
+                    <a href="{% url 'admin_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                {% endif %}
+
+
+                <!-- NOTIFICATIONS -->
+
+                <a
+                    href="{% url 'notifications' %}"
+                    class="nav-bell"
+                    title="Notifications"
+                >
+                    🔔
+                    {% if unread_notifications_count > 0 %}
+                        <span class="nav-bell-badge">
+                            {{ unread_notifications_count }}
+                        </span>
+                    {% endif %}
+                </a>
+
+
+                <!-- USER INFO -->
+
+                <div class="nav-user">
+
+                    <div class="nav-avatar">
+                        {{ user.username|first|upper }}
+                    </div>
+
+                    <div class="nav-user-info">
+
+                        <strong>
+                            {{ user.username }}
+                        </strong>
+
+                        <span>
+                            {{ user.role|title }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="logout-button"
+                >
+                    Logout
+                </a>
+
+            </nav>
+
+
+        {% else %}
+
+            <!-- GUEST NAVIGATION -->
+
+            <nav class="nav-links">
+                <a href="{% url 'login' %}?role=admin" class="admin-button">
+                    Admin Login
+                </a>
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="nav-button"
+                >
+                    Get Started
+                </a>
+
+            </nav>
+
+        {% endif %}
+
+
+
 
     </div>
 
@@ -113,7 +201,7 @@ InternHub | Internship Management System
                 manage the entire internship process.
             </p>
 
-
+            {% if not user.is_authenticated %}
             <div class="hero-buttons">
 
                 <a
@@ -132,6 +220,7 @@ InternHub | Internship Management System
                 </a>
 
             </div>
+            
 
 
             <div class="hero-login">
@@ -143,6 +232,7 @@ InternHub | Internship Management System
                 </a>
 
             </div>
+            {% endif %}
 
         </div>
 
@@ -250,8 +340,9 @@ InternHub | Internship Management System
 
     </div>
 
+    
 </section>
-
+{% include "internship/index.html" %}
 
 
 <!-- =====================================================
@@ -453,7 +544,7 @@ InternHub | Internship Management System
 </section>
 
 
-
+{% if not user.is_authenticated %}
 <!-- =====================================================
      CTA
 ===================================================== -->
@@ -494,7 +585,7 @@ InternHub | Internship Management System
     </div>
 
 </section>
-
+{% endif %}
 
 
 <!-- =====================================================
@@ -555,7 +646,7 @@ InternHub | Internship Management System
                 </h3>
 
                 <p>
-                    +880 1XXX-XXXXXX
+                    +880 1581-773773
                 </p>
 
             </div>

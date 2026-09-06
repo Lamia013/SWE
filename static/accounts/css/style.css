@@ -165,6 +165,48 @@ input {
 
 
 /* =========================================================
+   NOTIFICATION BELL
+   ========================================================= */
+
+.nav-bell {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.2rem;
+
+    margin-right: 6px;
+}
+
+
+.nav-bell-badge {
+    position: absolute;
+
+    top: -6px;
+    right: -10px;
+
+    background: #e53e3e;
+    color: white;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    min-width: 16px;
+    height: 16px;
+
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 3px;
+}
+
+
+/* =========================================================
    USER INFORMATION
    ========================================================= */
 
